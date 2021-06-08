@@ -22,8 +22,8 @@
                     <li class="nav-item"><a class="nav-link" href="/">home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/tricks">tricks</a></li>
                     {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <li class="nav-item"><a class="nav-link" href="/register">sign in</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/login">sign up</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">sign in</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register">sign up</a></li>
                     {% else %}
                     <li class="nav-item"><a class="nav-link" href="/logout"> log out </a></li>
                     {% endif %}
