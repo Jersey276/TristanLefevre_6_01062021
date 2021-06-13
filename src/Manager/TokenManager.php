@@ -77,7 +77,6 @@ class TokenManager extends AbstractManager
                 break;
             case "forgotPassword":
                 return true;
-                break;
             case "changePassword":
                 $user = $this->doctrine->getRepository(User::class)
                     ->find($token->getIdUser());
