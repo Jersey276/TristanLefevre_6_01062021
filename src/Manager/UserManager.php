@@ -6,13 +6,12 @@ use App\Manager\TokenManager;
 use App\Entity\Token;
 use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-class UserManager
+
+class UserManager extends AbstractManager
 {
-    private ObjectManager $doctrine;
+
     private MailerInterface $mailer;
     private UserPasswordHasherInterface $passwordEncoder;
 
@@ -30,7 +29,7 @@ class UserManager
         }
     }
 
-    public function register(User $user)
+    public function register(User $user) : void
     {
         // encode password
         $user->setPassword($this->passwordEncoder->hashPassword($user, $user->getPassword()));
@@ -46,14 +45,14 @@ class UserManager
         $tm->sendToken($user->getUsername(), $this->mailer, "email");
     }
 
-    public function forgotPassword(User $user)
+    public function forgotPassword(User $user) : void
     {
         // Send mail with new token for change password
         $tm = new TokenManager($this->doctrine);
         $tm->sendToken($user->getEmail(), $this->mailer, "password");
     }
 
-    public function changePassword(User $user, String $token)
+    public function changePassword(User $user, String $token) : void
     {
         // encode password
         $user->setPassword($this->passwordEncoder->hashPassword($user, $user->getPassword()));
@@ -62,7 +61,7 @@ class UserManager
         $tm->useToken($token, 'changePassword', $user->getPassword());
     }
 
-    public function validEmail(String $token)
+    public function validEmail(String $token) : bool
     {
         $tm = new TokenManager($this->doctrine);
         return $tm->useToken($token, "email");

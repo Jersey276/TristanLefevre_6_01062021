@@ -15,22 +15,22 @@ class Token
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int$id;
 
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $token;
+    private string $token;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $idUser;
+    private int $idUser;
 
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private $type;
+    private string $type;
 
     public function getId(): ?int
     {

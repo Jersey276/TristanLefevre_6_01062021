@@ -45,7 +45,7 @@ class AuthController extends AbstractController
     /**
      * @Route("/register", name="register")
      */
-    public function index(Request $request, MailerInterface $mailer)
+    public function index(Request $request, MailerInterface $mailer) : Response
     {
         $user = new User();
 
@@ -70,7 +70,7 @@ class AuthController extends AbstractController
     /**
      * @Route("password/forgot", methods={"GET", "POST"}, name="forgot_password")
      */
-    public function forgotPassword(Request $request, MailerInterface $mailer)
+    public function forgotPassword(Request $request, MailerInterface $mailer) : Response
     {
         $user = new User();
         $form = $this->createForm(ForgotPasswordType::class, $user);
@@ -90,7 +90,7 @@ class AuthController extends AbstractController
     /**
      * @Route("password/change", name="change_password")
      */
-    public function changePassword(Request $request)
+    public function changePassword(Request $request) : Response
     {
         $user = new User();
         $token = $request->query->get('token');
@@ -119,7 +119,7 @@ class AuthController extends AbstractController
     /**
      * @Route("/verify/email", name="check_email")
      */
-    public function validEmail(Request $request)
+    public function validEmail(Request $request) : Response
     {
         $mn = new UserManager(
             $this->getDoctrine()->getManager(),
@@ -134,7 +134,7 @@ class AuthController extends AbstractController
     /**
      * @Route("/logout", name="app_logout")
      */
-    public function logout()
+    public function logout() : Response
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
