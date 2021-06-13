@@ -45,7 +45,7 @@ class AuthController extends AbstractController
     /**
      * @Route("/register", name="register")
      */
-    public function index(Request $request, MailerInterface $mailer) : Response
+    public function index(Request $request, UserManager $userManager) : Response
     {
         $user = new User();
 
@@ -54,12 +54,7 @@ class AuthController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            (new UserManager(
-                $this->getDoctrine()->getManager(),
-                $mailer,
-                $this->passwordEncoder
-                )
-            )->register($user);
+            $userManager->register($user);
             return $this->redirectToRoute('app_login');
         }
         return $this->render('registration/index.html.twig', [
@@ -70,17 +65,13 @@ class AuthController extends AbstractController
     /**
      * @Route("password/forgot", methods={"GET", "POST"}, name="forgot_password")
      */
-    public function forgotPassword(Request $request, MailerInterface $mailer) : Response
+    public function forgotPassword(Request $request, UserManager $userManager) : Response
     {
         $user = new User();
         $form = $this->createForm(ForgotPasswordType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            (new UserManager(
-                $this->getDoctrine()->getManager(),
-                $mailer       
-                )
-            )->forgotPassword($user);
+            $userManager->forgotPassword($user);
         }
         return $this->render('security/forgotPassword.html.twig', [
             'form' => $form->createView(),
@@ -90,7 +81,7 @@ class AuthController extends AbstractController
     /**
      * @Route("password/change", name="change_password")
      */
-    public function changePassword(Request $request) : Response
+    public function changePassword(Request $request, UserManager $userManager) : Response
     {
         $user = new User();
         $token = $request->query->get('token');
@@ -103,12 +94,7 @@ class AuthController extends AbstractController
         );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            (new UserManager(
-                $this->getDoctrine()->getManager(),
-                null,
-                $this->passwordEncoder
-            )
-            )->changePassword($user, $token);
+            $userManager->changePassword($user, $token);
             return $this->redirectToRoute('/login');
         }
         return $this->render('security/changePassword.html.twig', [
@@ -119,14 +105,9 @@ class AuthController extends AbstractController
     /**
      * @Route("/verify/email", name="check_email")
      */
-    public function validEmail(Request $request) : Response
+    public function validEmail(Request $request, UserManager $manager) : Response
     {
-        $mn = new UserManager(
-            $this->getDoctrine()->getManager(),
-            null,
-            null
-        );
-        $mn->validEmail($request->query->get('token'));
+        $manager->validEmail($request->query->get('token'));
 
         return $this->redirectToRoute('app_login');
     }

@@ -3,9 +3,8 @@
 namespace App\Manager;
 
 use App\Manager\TokenManager;
-use App\Entity\Token;
 use App\Entity\User;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -14,19 +13,18 @@ class UserManager extends AbstractManager
 
     private MailerInterface $mailer;
     private UserPasswordHasherInterface $passwordEncoder;
+    private TokenManager $tm;
 
-    public function __construct(ObjectManager $doctrine,
-        MailerInterface $mailer = null,
-        UserPasswordHasherInterface $passwordEncoder = null
+    public function __construct(EntityManagerInterface $doctrine,
+        MailerInterface $mailer,
+        UserPasswordHasherInterface $passwordEncoder,
+        TokenManager $tokenManager
     )
     {
         $this->doctrine = $doctrine;
-        if (isset($mailer)) {
-            $this->mailer = $mailer;
-        }
-        if (isset($passwordEncoder)) {
-            $this->passwordEncoder = $passwordEncoder;
-        }
+        $this->mailer = $mailer;
+        $this->passwordEncoder = $passwordEncoder;
+        $this->tm = $tokenManager;
     }
 
     public function register(User $user) : void
@@ -41,15 +39,13 @@ class UserManager extends AbstractManager
         $this->doctrine->flush();
 
         // Send mail with new token for valid email
-        $tm = new TokenManager($this->doctrine);
-        $tm->sendToken($user->getUsername(), $this->mailer, "email");
+        $this->tm->sendToken($user->getUsername(), $this->mailer, "email");
     }
 
     public function forgotPassword(User $user) : void
     {
         // Send mail with new token for change password
-        $tm = new TokenManager($this->doctrine);
-        $tm->sendToken($user->getEmail(), $this->mailer, "password");
+        $this->tm->sendToken($user->getEmail(), $this->mailer, "password");
     }
 
     public function changePassword(User $user, String $token) : void
@@ -57,13 +53,11 @@ class UserManager extends AbstractManager
         // encode password
         $user->setPassword($this->passwordEncoder->hashPassword($user, $user->getPassword()));
 
-        $tm = new TokenManager($this->doctrine);
-        $tm->useToken($token, 'changePassword', $user->getPassword());
+        $this->tm->useToken($token, 'changePassword', $user->getPassword());
     }
 
     public function validEmail(String $token) : bool
     {
-        $tm = new TokenManager($this->doctrine);
-        return $tm->useToken($token, "email");
+        return $this->tm->useToken($token, "email");
     }
 }

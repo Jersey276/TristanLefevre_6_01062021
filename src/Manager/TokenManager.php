@@ -4,7 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Token;
 use App\Entity\User;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\Mailer\MailerInterface;
 class TokenManager extends AbstractManager
 {
 
-    public function __construct(ObjectManager $doctrine)
+    public function __construct(EntityManagerInterface $doctrine)
     {
         $this->doctrine = $doctrine;
     }
@@ -71,25 +71,26 @@ class TokenManager extends AbstractManager
             switch ($type) {
             case "email":
                 $user = $this->doctrine->getRepository(User::class)
-                    ->find($token->getId());
+                    ->find($token->getIdUser());
                 $user->setIsEmailCheck(true);
                 $this->doctrine->flush();
                 break;
             case "forgotPassword":
+                return true;
                 break;
             case "changePassword":
                 $user = $this->doctrine->getRepository(User::class)
-                    ->find($token->getId());
+                    ->find($token->getIdUser());
                 $user->setPassword($arg);
                 $this->doctrine->flush();
                 break;
             default:
                 return false;
             }
+            $this->doctrine->remove($token);
+            $this->doctrine->flush();
             return true;
         }
-        $this->doctrine->remove($token);
-        $this->doctrine->flush();
-        return true;
+        return false;
     }
 }
