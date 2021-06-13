@@ -10,15 +10,12 @@ use App\Manager\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AuthController extends AbstractController
 {
-
-    private UserPasswordHasherInterface $passwordEncoder;
 
     public function __construct(UserPasswordHasherInterface $passwordEncoder)
     {
@@ -63,7 +60,7 @@ class AuthController extends AbstractController
     }
 
     /**
-     * @Route("password/forgot", methods={"GET", "POST"}, name="forgot_password")
+     * @Route("/forgot_password", methods={"GET", "POST"}, name="forgot_password")
      */
     public function forgotPassword(Request $request, UserManager $userManager) : Response
     {
@@ -79,23 +76,22 @@ class AuthController extends AbstractController
     }
 
     /**
-     * @Route("password/change", name="change_password")
+     * @Route("/reset_password/{token}", name="change_password")
      */
-    public function changePassword(Request $request, UserManager $userManager) : Response
+    public function changePassword(Request $request, string $token, UserManager $userManager) : Response
     {
         $user = new User();
-        $token = $request->query->get('token');
         $form = $this->createForm(ChangePasswordType::class, 
                 $user,
                 [
-                    'action' => '/password/change?token='.$token,
+                    'action' => '/reset_password/'.$token,
                     'method' => 'POST'
                 ]
         );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $userManager->changePassword($user, $token);
-            return $this->redirectToRoute('/login');
+            return $this->redirectToRoute('app_login');
         }
         return $this->render('security/changePassword.html.twig', [
             'form' => $form->createView(),
@@ -103,11 +99,11 @@ class AuthController extends AbstractController
     }
 
     /**
-     * @Route("/verify/email", name="check_email")
+     * @Route("/verify_email/{token}", name="check_email")
      */
-    public function validEmail(Request $request, UserManager $manager) : Response
+    public function validEmail(string $token, UserManager $manager) : Response
     {
-        $manager->validEmail($request->query->get('token'));
+        $manager->validEmail($token);
 
         return $this->redirectToRoute('app_login');
     }

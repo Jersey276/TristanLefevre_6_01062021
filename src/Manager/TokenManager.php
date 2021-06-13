@@ -46,7 +46,7 @@ class TokenManager extends AbstractManager
                 ->subject("Confirmer l'adresse mail")
                 ->htmlTemplate("email/validEmail.html.twig")
                 ->context([
-                    'link' => '/verify/email?token='. $token->getToken()
+                    'link' => '/verify_email/'. $token->getToken()
                 ]);
                 break;
             case "password":
@@ -55,7 +55,7 @@ class TokenManager extends AbstractManager
                 ->subject("Changer le mot de passe")
                 ->htmlTemplate("email/changePassword.html.twig")
                 ->context([
-                    'link' => '/password/change?token='. $token->getToken()
+                    'link' => '/reset_password/'. $token->getToken()
                 ]);
                 break;
         }
