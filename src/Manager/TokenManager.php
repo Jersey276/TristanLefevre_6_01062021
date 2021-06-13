@@ -4,19 +4,19 @@ namespace App\Manager;
 
 use App\Entity\Token;
 use App\Entity\User;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 
-class TokenManager
+class TokenManager extends AbstractManager
 {
-    private ObjectManager $doctrine;
 
-    public function __construct(ObjectManager $doctrine)
+    public function __construct(EntityManagerInterface $doctrine)
     {
         $this->doctrine = $doctrine;
     }
-    public function sendToken(String $search, MailerInterface $mailer, String $type)
+    public function sendToken(String $search, MailerInterface $mailer, String $type) : bool
     {
         $token = new Token();
         $token->setToken();
@@ -31,31 +31,31 @@ class TokenManager
                 $user = $this->doctrine->getRepository(User::class)
                 ->findOneBy(['email' => $search]);
                 break;
+            default:
+            throw new Exception("le type de token demandé n'existe pas");
         }
 
         $token->setIdUser($user->getId());
         $this->doctrine->persist($token);
         $this->doctrine->flush();
-
+        $mail = (new TemplatedEmail());
         switch ($type) {
             case "email":
-                $mail = (new TemplatedEmail())
-                ->from($user->getEmail())
+                $mail->from($user->getEmail())
                 ->to("no-reply@tristan-lefevre.fr")
                 ->subject("Confirmer l'adresse mail")
                 ->htmlTemplate("email/validEmail.html.twig")
                 ->context([
-                    'link' => '/verify/email?token='. $token->getToken()
+                    'link' => '/verify_email/'. $token->getToken()
                 ]);
                 break;
             case "password":
-                $mail = (new TemplatedEmail())
-                ->from($user->getEmail())
+                $mail->from($user->getEmail())
                 ->to("no-reply@tristan-lefevre.fr")
                 ->subject("Changer le mot de passe")
                 ->htmlTemplate("email/changePassword.html.twig")
                 ->context([
-                    'link' => '/password/change?token='. $token->getToken()
+                    'link' => '/reset_password/'. $token->getToken()
                 ]);
                 break;
         }
@@ -63,7 +63,7 @@ class TokenManager
         return true;
     }
 
-    public function useToken(String $token, String $type, String $arg = null)
+    public function useToken(String $token, String $type, String $arg = null) : bool
     {
         $token = $this->doctrine->getRepository(Token::class)
             ->findOneBy(['token' => $token]);
@@ -71,26 +71,25 @@ class TokenManager
             switch ($type) {
             case "email":
                 $user = $this->doctrine->getRepository(User::class)
-                    ->find($token->getId());
+                    ->find($token->getIdUser());
                 $user->setIsEmailCheck(true);
                 $this->doctrine->flush();
                 break;
             case "forgotPassword":
                 return true;
-                break;
             case "changePassword":
                 $user = $this->doctrine->getRepository(User::class)
-                    ->find($token->getId());
+                    ->find($token->getIdUser());
                 $user->setPassword($arg);
                 $this->doctrine->flush();
                 break;
             default:
                 return false;
-                break;
             }
+            $this->doctrine->remove($token);
+            $this->doctrine->flush();
+            return true;
         }
-        $this->doctrine->remove($token);
-        $this->doctrine->flush();
-        return true;
+        return false;
     }
 }
