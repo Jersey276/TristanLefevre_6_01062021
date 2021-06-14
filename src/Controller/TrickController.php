@@ -12,12 +12,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TrickController extends AbstractController
 {
 
     /**
      * @Route("/tricks/new", name="tricks_new_form")
+     * @IsGranted("ROLE_USER")
      */
     public function trickNewForm(Request $request, TrickManager $manager) : Response
     {
@@ -49,6 +51,7 @@ class TrickController extends AbstractController
 
     /**
      * @Route("/tricks/new/category", name="add_category")
+     * @IsGranted("ROLE_USER")
      */
     public function trickNewCategory(Request $request, TrickGroupManager $manager) : Response
     {
@@ -82,6 +85,7 @@ class TrickController extends AbstractController
 
     /**
      * @Route("/tricks/{id}/edit", name="tricks_edit_form")
+     * @IsGranted("ROLE_USER")
      */
     public function trickEditForm(Request $request, Trick $item) : Response
     {
@@ -112,6 +116,7 @@ class TrickController extends AbstractController
 
     /**
      * @Route("/tricks/{id}/remove", name="tricks_remove")
+     * @IsGranted("ROLE_USER")
      */
     public function trickRemove(Trick $item, TrickManager $tricks) : Response
     {
