@@ -23,6 +23,7 @@ class CommentController extends AbstractController
      */
     public function loadMode(int $ask): String
     {
-        return printf("commentaire ". ($ask * 8 - 7) . " à " . ($ask * 8));
+        return print
+        print_r("commentaire ". ($ask * 8 - 7) . " à " . ($ask * 8));
     }
 }

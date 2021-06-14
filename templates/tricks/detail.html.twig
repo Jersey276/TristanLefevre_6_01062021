@@ -21,7 +21,31 @@
 <div class="container">
     <h1> {{ tricks.getTitle() }}</h1>
     <p> {{ tricks.getDescription()| nl2br }}</p>
-    <p>{{ (tricks.getTrickGroup()).getNameGroup() }}</p>
+	<div class="d-flex flex-row justify-content-between">
+		<p>{{ (tricks.getTrickGroup()).getNameGroup() }}</p>
+		{% if tricks.getModifiedAt() is defined %}
+			{{ tricks.getModifiedAt()|date('d/m/Y h:i') }}
+		{% else %}
+			{{ tricks.getCreatedAt()|date('d/m/Y h:i') }}
+		{% endif %}
+	</div>
+	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+		{{ form_start(form) }}
+		<div class="d-flex flex-row align-items-center">
+			{{ form_widget(form.text, { 'attr' : { 'row' : 1 }}) }}
+			{{ form_row(form.submit) }}
+		</div>
+		{{ form_end(form) }}
+	{% endif %}
+	<ul class="list-group list-group-flush">
+		{% for comment in tricks.getComments() %}
+		<li class="list-group-item">
+			<h5>{{ (comment.getUser()).getUserName() }}</h5>
+			<p>{{ (comment.getCreatedAt()|date('d/m/Y h:i'))}}</p>
+			<p>{{ comment.getText()}}</p>
+		</li>
+		{% endfor %}
+	</ul>
 </div>
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
