@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Trick;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TrickManager extends AbstractManager
@@ -15,7 +16,14 @@ class TrickManager extends AbstractManager
 
     public function save(Trick $trick) : void
     {
+        $trick->setCreatedAt(new DateTime('@'.strtotime('now')));
         $this->doctrine->persist($trick);
+        $this->doctrine->flush();
+    }
+
+    public function edit(Trick $trick) : void
+    {
+        $trick->setModifiedAt(new DateTime('@'.strtotime('now')));
         $this->doctrine->flush();
     }
 

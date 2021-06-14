@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Entity\TrickGroup;
+use App\Form\TrickCommentType;
 use App\Form\TrickGroupType;
 use App\Form\TrickType;
+use App\Manager\CommentManager;
 use App\Manager\TrickGroupManager;
 use App\Manager\TrickManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -76,18 +79,29 @@ class TrickController extends AbstractController
     /**
      * @Route("/tricks/{id}", name="tricks_detail")
      */
-    public function trickDetail(Trick $item) : Response
+    public function trickDetail(Request $request, Trick $item, CommentManager $manager) : Response
     {
-        return $this->render('tricks/detail.html.twig', [
-            'tricks' => $item
-        ]);
+        $arg = [ 'tricks' => $item ];
+        if ( $this->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $comment = new Comment();
+            $form = $this->createForm(TrickCommentType::class, $comment);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                $newTrick = $manager->save($comment, $item, $this->getUser());
+                $arg['tricks'] = $newTrick;
+            }
+            $arg['form']= $form->createView();
+        }
+        return $this->render('tricks/detail.html.twig', $arg);
     }
 
     /**
      * @Route("/tricks/{id}/edit", name="tricks_edit_form")
      * @IsGranted("ROLE_USER")
      */
-    public function trickEditForm(Request $request, Trick $item) : Response
+    public function trickEditForm(Request $request, Trick $item, TrickManager $manager) : Response
     {
         $formGroup = $this->createForm(
             TrickGroupType::class, new TrickGroup(),[
@@ -102,7 +116,7 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $this->getDoctrine()->getManager()->flush();
+            $manager->edit($item);
             return $this->redirectToRoute('tricks_detail',['id' => $item->getId()]);
         }
         return $this->render('tricks/tricksForm.html.twig',
