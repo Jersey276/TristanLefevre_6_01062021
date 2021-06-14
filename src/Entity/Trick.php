@@ -39,17 +39,17 @@ class Trick
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="Tricks", orphanRemoval=true)
      * @ORM\OrderBy({"id" = "DESC"})
      */
-    private $comments;
+    private Collection $comments;
 
     /**
      * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
      */
-    private $createdAt;
+    private \DatetimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $ModifiedAt;
+    private \DatetimeInterface $ModifiedAt;
 
     public function __construct()
     {

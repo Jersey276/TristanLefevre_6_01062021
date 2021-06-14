@@ -51,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="User", orphanRemoval=true)
      */
-    private $comments;
+    private Collection $comments;
 
     public function __construct()
     {
