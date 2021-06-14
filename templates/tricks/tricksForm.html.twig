@@ -1,15 +1,100 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tricks Form{% endblock %}
+{% block title %}Trick Form
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Form ✅</h1>
-    <p> un trick passionnant</p>
+	<div class="container">
+		<h1 class="h3 mb-3 font-weight-normal">Ajouter une nouvelle figure</h1>
+		{{ form_start(form) }}
+		{{ form_errors(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.description) }}
+        {{ form_errors(form.trickGroup) }}
+        <div class="input-group my-3">
+            <div class="input-group-text">
+            {{form_label(form.trickGroup)}}
+            </div>
+            {{ form_widget(form.trickGroup) }}
+            <button type="button" class="btn btn-primary" data-bs-toggle='modal' data-bs-target='#staticBackdrop'>+</button>
+        </div>
+        <div class="text-end">
+            {% if isEdit %}
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal">
+                    Supprimer
+                </button>
+                {{ form_widget(form.Envoyer, {'label':'Mettre à jour'}) }}
+            {% else %}
+                {{ form_widget(form.Envoyer, {'label':'Poster'}) }}
+            {% endif %}
+        </div>
+		{{ form_end(form) }}
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="staticBackdropLabel">Nouvel Catégorie</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+                	{{ form_start(formGroup) }}
+					<div class="modal-body">
+                        {{ form_row(formGroup.nameGroup) }}
+					</div>
+					<div class="modal-footer align-content-center">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        {{ form_widget(formGroup.Envoyer) }}
+		        {{ form_end(formGroup) }}
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
+
+{% if isEdit %}
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+				</button>
+			</div>
+			<div class="modal-body">
+				<p><strong>Etes-vous sûr de vouloir supprimer cette figure ?</strong></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" data-dismiss="modal">Non</button>
+				<a id="deleteConfirm" href="{{ tricks.getRemoveUrl() }}" type="button" class="btn btn-danger">Oui</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<script>
+var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'), {keyboard: false})
+
+
+$("#TrickGroupAdd").submit( function(e) {
+    e.preventDefault();
+    nameGroup = $("#trick_group_nameGroup").val();
+
+    $.ajax({
+        url : '\\tricks\\new\\category',
+        data : {'nameGroup' : nameGroup},
+        type : 'Post',
+        success : function(data) {
+            $( "#trick_trickGroup" ).append(new Option(data['nameGroup'], data['id']));
+            $( "#trick_group_nameGroup" ).val('');
+            $( "#trick_tricksGroup[value="+data['id']+"]" ).prop('selected', true);
+            myModal.toggle();
+        }
+    })
+
+});
+</script>
 {% endblock %}
