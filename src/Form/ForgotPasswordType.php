@@ -29,7 +29,7 @@ class ForgotPasswordType extends AbstractType
                     ])
                 ]
             ])
-            ->add('submit', SubmitType::class, [
+            ->add('resetPassword', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-success'
                 ] 

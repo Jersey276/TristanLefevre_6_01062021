@@ -49,7 +49,7 @@ class RegisterFormType extends AbstractType
                     ]
                 ]
             ])
-            ->add('submit', SubmitType::class, [
+            ->add('register', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]
