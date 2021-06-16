@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Entity\TrickGroup;
 use App\Form\TrickCommentType;
+use App\Form\TrickFrontType;
 use App\Form\TrickGroupType;
 use App\Form\TrickType;
 use App\Manager\CommentManager;
@@ -39,6 +40,8 @@ class TrickController extends AbstractController
                 ]
             );
 
+            $formFront = $this->createForm(TrickFrontType::class);
+
             if ($form->isSubmitted() && $form->isValid())
             {
                 $manager->save($tricks);
@@ -47,6 +50,7 @@ class TrickController extends AbstractController
             return $this->render('tricks/tricksForm.html.twig', [
                 'form' => $form->createView(),
                 'formGroup' => $formGroup->createView(),
+                'frontImage' => $formFront->createView(),
                 'isEdit' => false,
             ]);
         }
@@ -114,6 +118,12 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $item);
         $form->handleRequest($request);
 
+        $formFront = $this->createForm(TrickFrontType::class, null, [
+            'attr' => [
+                'id' => 'TrickFrontModify'
+            ]
+        ]);
+
         if ($form->isSubmitted() && $form->isValid())
         {
             $manager->edit($item);
@@ -123,6 +133,7 @@ class TrickController extends AbstractController
         [
             'form' => $form->createView(),
             'formGroup' => $formGroup->createView(),
+            'frontImage' => $formFront->createView(),
             'isEdit' => true,
             'tricks' => $item
         ]);

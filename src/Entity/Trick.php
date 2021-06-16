@@ -51,6 +51,11 @@ class Trick
      */
     private \DatetimeInterface $ModifiedAt;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $Frontpath;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -163,6 +168,23 @@ class Trick
     public function setModifiedAt(?\DateTimeInterface $ModifiedAt): self
     {
         $this->ModifiedAt = $ModifiedAt;
+
+        return $this;
+    }
+
+    public function isModified(): bool
+    {
+        return isset($this->ModifiedAt);
+    }
+
+    public function getFrontpath(): ?string
+    {
+        return $this->Frontpath;
+    }
+
+    public function setFrontpath(?string $Frontpath): self
+    {
+        $this->Frontpath = $Frontpath;
 
         return $this;
     }
