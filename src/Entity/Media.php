@@ -125,6 +125,7 @@ class Media
                     return null;
             }
         }
+        return null;
     }
 
     public function getPlatform() : ?string
