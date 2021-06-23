@@ -49,11 +49,22 @@ class Trick
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private \DatetimeInterface $ModifiedAt;
+    private \DatetimeInterface $modifiedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="trick")
+     */
+    private Collection $medias;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Media::class, cascade={"persist", "remove"})
+     */
+    private Media $front;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -157,12 +168,74 @@ class Trick
 
     public function getModifiedAt(): ?\DateTimeInterface
     {
-        return $this->ModifiedAt;
+        return $this->modifiedAt;
     }
 
-    public function setModifiedAt(?\DateTimeInterface $ModifiedAt): self
+    public function setModifiedAt(?\DateTimeInterface $modifiedAt): self
     {
-        $this->ModifiedAt = $ModifiedAt;
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    public function isModified(): bool
+    {
+        return isset($this->modifiedAt);
+    }
+
+    /**
+     * @return Collection|Media[]
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): self
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias[] = $media;
+            $media->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): self
+    {
+        if ($this->medias->removeElement($media)) {
+            // set the owning side to null (unless already changed)
+            if ($media->getTrick() === $this) {
+                $media->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFirstMedia(string $type) : ?Media
+    {
+        $medias = $this->getMedias();
+
+        foreach ($medias as $media) {
+            if ($media->getType()->getName() == $type) {
+                return $media;
+            }
+        }
+        return null;
+    }
+
+    public function getFront(): ?Media
+    {
+        if (isset($this->front)) {
+            return $this->front;
+        }
+        return null;
+    }
+
+    public function setFront(?Media $front): self
+    {
+        $this->front = $front;
 
         return $this;
     }

@@ -1,70 +1,135 @@
 {% extends 'base.html.twig' %}
-
+{% block stylesheets %}
+	<link rel="stylesheet" href="/css/media.css">
+{% endblock %}
 {% block title %} {{tricks.getTitle()}} {% endblock %}
 
 {% block body %}
-
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-	<div class="d-flex flex-row">
-		<a href="{{ tricks.getEditUrl() }}" class="btn link-dark">
-			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-				<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-			</svg>
-		</a>
-		<button class="btn btnRemove" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-id="{{ tricks.getRemoveUrl()}}">
-			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-				<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-			</svg>
-		</button>
-	</div>
-{% endif %}
-<div class="container">
-    <h1> {{ tricks.getTitle() }}</h1>
-    <p> {{ tricks.getDescription()| nl2br }}</p>
-	<div class="d-flex flex-row justify-content-between">
-		<p>{{ (tricks.getTrickGroup()).getNameGroup() }}</p>
-		{% if tricks.getModifiedAt() is defined %}
-			{{ tricks.getModifiedAt()|date('d/m/Y h:i') }}
-		{% else %}
-			{{ tricks.getCreatedAt()|date('d/m/Y h:i') }}
-		{% endif %}
-	</div>
-	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-		{{ form_start(form) }}
-		<div class="d-flex flex-row align-items-center">
-			{{ form_widget(form.text, { 'attr' : { 'row' : 1 }}) }}
-			{{ form_row(form.submit) }}
-		</div>
-		{{ form_end(form) }}
-	{% endif %}
-	<ul class="list-group list-group-flush">
-		{% for comment in tricks.getComments() %}
-		<li class="list-group-item">
-			<h5>{{ (comment.getUser()).getUserName() }}</h5>
-			<p>{{ (comment.getCreatedAt()|date('d/m/Y h:i'))}}</p>
-			<p>{{ comment.getText()}}</p>
-		</li>
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			{% if label == "notice" %}
+				<div class="alert alert-success">
+			{% else %}
+				<div class="alert alert-{{ label }}">
+			{% endif %}
+				{{ message }}
+			</div>
 		{% endfor %}
-	</ul>
-</div>
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-				</button>
+	{% endfor %}
+	<div class="container my-5">
+		<div class="position-relative">
+			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+				<div class="position-absolute border bg-white d-flex flex-row" style="top : 10px; right : 10px;">
+					<a href="{{ tricks.getEditUrl() }}" class="btn link-dark">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+							<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+						</svg>
+					</a>
+					<button class="btn btnRemove" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-id="{{ tricks.getRemoveUrl()}}">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+							<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+						</svg>
+					</button>
+				</div>
+			{% endif %}
+			<h1 class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"> {{ tricks.getTitle() }}</h1>
+			{% if (tricks is defined) and ((tricks.getFront() != null) ) %}
+				<img id="frontpath" class="w-100" src="{{ tricks.getFront.getPath() }}" style="height : 25rem">
+			{% elseif (tricks is defined) and ( tricks.getMedias() != [] ) %}
+				<img id="frontpath" class="w-100" src="{{ tricks.getFirstMedia('image').getPath() }}" style="height : 25rem">
+			{% else %}
+				<img id="frontpath" class="w-100" src="/images/trick/default.png" style="height : 25rem">
+			{% endif %}
+		</div>
+		<div class="my-3 align-items-center row row-cols-1 row-cols-md-6 g-4">
+		{% for media in tricks.getMedias() %}
+				{% if media.getType.getName() == 'image' %}
+					<button class="col btn media-display" data-type="{{ media.getType.getName() }}" data-url="{{ media.getPath() }}">
+					<img class="card-img-top media-img" src="{{media.getPath()}}">
+				{% elseif media.getType.getName() == 'video' %}
+					<button class="col btn media-display" data-type="{{ media.getType.getName() }}" data-url="{{ media.getDisplayUrl() }}">
+					<img class="card-img-top media-video" src="{{media.getThumbnails()}}">
+				{% endif %}
+			</button>
+		{% endfor %}
+		</div>
+		<p> {{ tricks.getDescription()| nl2br }}</p>
+		<div class="d-flex flex-row justify-content-between">
+			<p>{{ (tricks.getTrickGroup()).getNameGroup() }}</p>
+			{{ tricks.getCreatedAt()|date('d/m/Y h:i') }}
+			{% if tricks.isModified() %}
+				{{ tricks.getModifiedAt()|date('d/m/Y h:i') }}
+			{% else %}
+				pas encore modifié
+			{% endif %}
+		</div>
+		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+			{{ form_start(form) }}
+			<div class="d-flex flex-row align-items-center">
+				{{ form_widget(form.text, { 'attr' : { 'row' : 1 }}) }}
+				{{ form_row(form.submit) }}
 			</div>
-			<div class="modal-body">
-				<p><strong>Etes-vous sûr de vouloir supprimer cette figure ?</strong></p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-success" data-dismiss="modal">Non</button>
-				<a id="deleteConfirm" href="{{ tricks.getRemoveUrl() }}" type="button" class="btn btn-danger">Oui</a>
+			{{ form_end(form) }}
+		{% endif %}
+		<ul class="list-group list-group-flush">
+			{% for comment in tricks.getComments() %}
+			<li class="list-group-item">
+				<h5>{{ (comment.getUser()).getUserName() }}</h5>
+				<p>{{ (comment.getCreatedAt()|date('d/m/Y h:i'))}}</p>
+				<p>{{ comment.getText()}}</p>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<!--Modal-->
+	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+		<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+						<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+						</button>
+					</div>
+					<div class="modal-body">
+						<p><strong>Etes-vous sûr de vouloir supprimer cette figure ?</strong></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success" data-dismiss="modal">Non</button>
+						<a id="deleteConfirm" href="{{ tricks.getRemoveUrl() }}" type="button" class="btn btn-danger">Oui</a>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-</div>
-{% endif %}
+	{% endif %}
+		<div class="modal fade" id="MediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content" id="MediaContent">
+				</div>
+			</div>
+		</div>
+
+<script>
+	$('.media-display').click( function(e) {
+		var data = e.currentTarget.dataset;
+		var myModal = new bootstrap.Modal(document.getElementById('MediaModal'), {keyboard: false});
+		$('#MediaContent').empty();
+		switch(data.type) {
+			case 'image' :
+				$('#MediaContent').append('<img src="'+ data.url +'">');
+				break;
+			case 'video' :
+				$('#MediaContent').append(
+					'<iframe width="560" height="315" src="'+ data.url +'" frameborder="0"' +
+					' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+				);
+				break;
+			default :
+				process.exit(1);
+				break;
+		}
+		myModal.toggle();
+
+	});
+</script>
 {% endblock %}

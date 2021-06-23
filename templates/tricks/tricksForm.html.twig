@@ -4,15 +4,81 @@
 {% endblock %}
 
 {% block body %}
-
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			{% if label == "notice" %}
+				<div class="alert alert-success">
+			{% else %}
+				<div class="alert alert-{{ label }}">
+			{% endif %}
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endfor %}
 	<div class="container">
-		<h1 class="h3 mb-3 font-weight-normal">Ajouter une nouvelle figure</h1>
+		<div class="position-relative">
+			{% if isEdit %}
+				<div class="position-absolute bg-white float d-flex justify-content-around align-items-center border" style="top : 10px; right : 10px;">
+					<button type="button" class="btn" data-bs-toggle='modal' data-bs-target='#ModifyFrontModal'>
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+							<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+						</svg>
+					</button>
+					<a class="btn" href="/tricks/{{ tricks.getId() }}/media/remove_front/">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+							<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+						</svg>
+					</a>
+				</div>
+			{% endif %}
+			{% if (tricks is defined) and ( tricks.getFront() != null) %}
+				<img id="frontpath" class="w-100" src="{{ tricks.getFront.getPath() }}" style="height : 25rem">
+			{% elseif (tricks is defined) and ( tricks.getMedias() != [] ) %}
+				<img id="frontpath" class="w-100" src="{{ tricks.getFirstMedia('image').getPath() }}" style="height : 25rem">
+			{% else %}
+				<img id="frontpath" class="w-100" src="/images/trick/default.png" style="height : 25rem">
+			{% endif %}
+		{% if isEdit %}
+			<h1 class="h3 mb-3 font-weight-normal">Modifier la figure</h1>
+			<div class="row row-cols-1 row-cols-md-6 g-4" id="MediaList">
+				{% for media in tricks.getMedias() %}
+					<div class="col d-flex flex-column h-100"> 
+						{% if media.getType.getName() == 'image' %}
+							<img class="card-img-top media-img" src="{{media.getPath()}}">
+						{% elseif media.getType.getName() == 'video' %}
+							<img class="card-img-top h-100 media-video" src="{{media.getThumbnails()}}">
+						{% endif %}
+						<div class="mt-2 align-self-end border d-flex flex-row" id="media-{{ media.getId() }}">
+							{% if media.getType.getName() == 'image' %}
+								<button type="button" class="btn media-modify" data-media-id='{{ media.getId() }}' data-media-path='{{ media.getPath() }}' data-media-type="{{ media.getType.getId() }}">
+							{% elseif media.getType.getName() == 'video' %}
+								<button type="button" class="btn media-modify" data-media-id='{{ media.getId() }}' data-media-path='{{ media.getOriginalUrl() }}' data-media-type="{{ media.getType.getId() }}">
+							{% endif %}
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+									<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+								</svg>
+							</button>
+							<a class="btn" href="{{ media.getRemoveUrl() }}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+									<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+								</svg>
+							</a>
+						</div>
+					</div>
+				{% endfor %}
+				<div class="col">
+					<button id="media-add" class="card-img-top media-img btn btn-outline-primary" style="height: 10rem; min-height: 200px">+</button>
+				</div>
+			</div>
+		{% else %}
+			<h1 class="h3 mb-3 font-weight-normal">Ajouter une nouvelle figure</h1>
+		{% endif %}
 		{{ form_start(form) }}
 		{{ form_errors(form) }}
         {{ form_row(form.title) }}
         {{ form_row(form.description) }}
         {{ form_errors(form.trickGroup) }}
-        <div class="input-group my-3">
+        <div class="input-group my-3 mr-auto">
             <div class="input-group-text">
             {{form_label(form.trickGroup)}}
             </div>
@@ -54,14 +120,13 @@
 	</div>
 </div>
 
+<!--Modal-->
 {% if isEdit %}
 <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-				</button>
 			</div>
 			<div class="modal-body">
 				<p><strong>Etes-vous sûr de vouloir supprimer cette figure ?</strong></p>
@@ -73,28 +138,182 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="ModifyFrontModal" tabindex="-1" role="dialog" aria-labelledby="ModifyFrontModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Changer l'image principale</h5>
+			</div>
+			<div id="myFrontAlert">
+			</div>
+			{{ form_start(frontImage) }}
+				<div class="modal-body">
+					{{ form_row(frontImage.front) }}
+				</div>
+				<div class="modal-footer">
+					{{ form_widget(frontImage.submit) }}
+				</div>
+			{{ form_end(frontImage)}}
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="MediaModal" tabindex="-1" role="dialog" aria-labelledby="MediaModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Ajouter un média</h5>
+			</div>
+			<div id="myFrontAlert">
+			</div>
+			<form id="Media_form">
+				<div class="modal-body" id="media_form_body">
+					<select id="MediaForm_type" name="media_form">
+						<option value="">type de media</option>
+						<option value="1">image</option>
+						<option value="2">video</option>
+					</select>
+				</div>
+				<input id="media_form_id" name="media_id" type="hidden" value="">
+				<div id="media_form_footer" class="modal-footer">
+					<input type="submit" value="Ajouter">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 {% endif %}
-
 <script>
-var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'), {keyboard: false})
+$('document').ready( function() {
+	$("#TrickGroupAdd").submit( function(e) {
+		var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'), {keyboard: false});
+		e.preventDefault();
+		nameGroup = $("#trick_group_nameGroup").val();
 
+		$.ajax({
+			url : '\\tricks\\new\\category',
+			data : {'nameGroup' : nameGroup},
+			type : 'Post',
+			success : function(data) {
+				$( "#trick_trickGroup" ).append(new Option(data['nameGroup'], data['id']));
+				$( "#trick_group_nameGroup" ).val('');
+				$( "#trick_tricksGroup[value="+data['id']+"]" ).prop('selected', true);
+				myModal.hide();
+			}
+		});
 
-$("#TrickGroupAdd").submit( function(e) {
-    e.preventDefault();
-    nameGroup = $("#trick_group_nameGroup").val();
+	});
+	{% if isEdit %}
+	var id = {{ tricks.getId() }};
 
-    $.ajax({
-        url : '\\tricks\\new\\category',
-        data : {'nameGroup' : nameGroup},
-        type : 'Post',
-        success : function(data) {
-            $( "#trick_trickGroup" ).append(new Option(data['nameGroup'], data['id']));
-            $( "#trick_group_nameGroup" ).val('');
-            $( "#trick_tricksGroup[value="+data['id']+"]" ).prop('selected', true);
-            myModal.toggle();
-        }
-    })
+	$("#MediaForm_type").change( function(e) {
+		$('#media_path').remove();
+		switch ($("#MediaForm_type option:selected").val()) {
+			case "1" :
+				$('#media_form_body').append($('<input>', {
+					type: 'file',
+					class:'form_control',
+					id: 'media_path',
+					name: 'path'
+				}));
+				$('.')
+			break;
+			case "2" :
+				$('#media_form_body').append($('<input>', {
+					type: 'text',
+					class: 'form-control',
+					id: 'media_path',
+					name: 'path'
+				}));
+			break;
+		}
+	});
+	
+	$("#Media_form").submit( function(e) {
+		e.preventDefault();
+		console.log(e);
+		var type = e.currentTarget[0].value;
+		var formdata = new FormData();
+		formdata.append('type', type);
+		switch (type) {
+			case '1' :
+				formdata.append('path', ($('#media_path').prop('files'))[0]);
+				break;
+			case '2' :
+				formdata.append('path', e.currentTarget['path'].value );
+				break;
+			default:
+				process.exit(1);
+		}
+		if (e.currentTarget['media_form_id'].value != "") {
+			var url = "media/modify/"+ e.currentTarget['media_form_id'].value;
+		} else {
+			var url = "media/add"
+		}
 
+		$.ajax({
+			url : url,
+			type : "Post",
+			data : formdata,
+			processData: false,
+			contentType: false,
+			success : function(e) {
+				document.location.reload();
+			}
+		})
+	});
+
+	$(".media-modify").click( function(e) {
+		var data = e.currentTarget.attributes;
+		var myModal = new bootstrap.Modal(document.getElementById('MediaModal'), {keyboard: false});
+		$('#media_path').remove();
+		$('#media_set_front').remove();
+		switch (data['data-media-type'].value) {
+			case "1" :
+				$('#media_form_body').append($('<input>', {
+					type: 'file',
+					class:'form_control',
+					id: 'media_path',
+					name: 'path'
+				}));
+				$('#media_form_footer').append($('<a>', {
+					href :'media/set_front/' + data['data-media-id'].value,
+					class :'btn btn-success',
+					id : 'media_set_front',
+					
+				}));
+				$('#media_set_front').append('mettre à la une');
+				break;
+			case "2" :
+				$('#media_form_body').append($('<input>', {
+					type: 'text',
+					class: 'form-control',
+					id: 'media_path',
+					name: 'path',
+				}));
+				$('#media_path').val(data['data-media-path'].value)
+				break;
+		}
+		$("#media_form_id").val(data['data-media-id'].value);
+		$('#MediaForm_type option[value="'+ data['data-media-type'].value +'"]').prop('selected', true);
+		$("#MediaForm_type").prop('disabled', 'disabled');
+		myModal.toggle();
+	});
+
+	$("#media-add").click( function(e) {
+		var myModal = new bootstrap.Modal(document.getElementById('MediaModal'), {keyboard: false});
+		$("#MediaForm_type").prop('disabled', false);
+		$('#MediaForm_type').prop('selectedIndex',0);
+		$("#media_form_id").val('');
+		$('#media_path').remove();
+		myModal.toggle();
+	});
+	{% endif %}
 });
 </script>
+{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="/css/media.css">
 {% endblock %}
