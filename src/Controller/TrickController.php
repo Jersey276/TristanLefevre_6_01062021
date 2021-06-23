@@ -8,7 +8,6 @@ use App\Entity\TrickGroup;
 use App\Form\TrickCommentType;
 use App\Form\TrickFrontType;
 use App\Form\TrickGroupType;
-use App\Form\TrickMediaType;
 use App\Form\TrickType;
 use App\Manager\CommentManager;
 use App\Manager\MediaManager;
