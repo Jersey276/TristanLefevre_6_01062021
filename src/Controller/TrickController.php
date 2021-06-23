@@ -6,9 +6,11 @@ use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Entity\TrickGroup;
 use App\Form\TrickCommentType;
+use App\Form\TrickFrontType;
 use App\Form\TrickGroupType;
 use App\Form\TrickType;
 use App\Manager\CommentManager;
+use App\Manager\MediaManager;
 use App\Manager\TrickGroupManager;
 use App\Manager\TrickManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,14 +41,21 @@ class TrickController extends AbstractController
                 ]
             );
 
+            $formFront = $this->createForm(TrickFrontType::class);
+
             if ($form->isSubmitted() && $form->isValid())
             {
                 $manager->save($tricks);
+                $this->addFlash(
+                    'notice',
+                    'La figure à été mise à jour'
+                );
                 return $this->redirectToRoute("tricks_detail",['id' => $tricks->getId()]);
             }
             return $this->render('tricks/tricksForm.html.twig', [
                 'form' => $form->createView(),
                 'formGroup' => $formGroup->createView(),
+                'frontImage' => $formFront->createView(),
                 'isEdit' => false,
             ]);
         }
@@ -101,7 +110,7 @@ class TrickController extends AbstractController
      * @Route("/tricks/{id}/edit", name="tricks_edit_form")
      * @IsGranted("ROLE_USER")
      */
-    public function trickEditForm(Request $request, Trick $item, TrickManager $manager) : Response
+    public function trickEditForm(Request $request, Trick $item, TrickManager $trickManager, MediaManager $mediaManager) : Response
     {
         $formGroup = $this->createForm(
             TrickGroupType::class, new TrickGroup(),[
@@ -116,13 +125,26 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $manager->edit($item);
+            $trickManager->edit($form->getData());
+            $this->addFlash(
+                'notice',
+                'La figure à été mise à jour'
+            );
             return $this->redirectToRoute('tricks_detail',['id' => $item->getId()]);
         }
+
+        $formFront = $this->createForm(TrickFrontType::class, $item);
+        $formFront->handleRequest($request);
+
+        if ($formFront->isSubmitted() && $formFront->isValid()) {
+            $mediaManager->setFront($formFront->getData(), $item->getFront());
+        }
+
         return $this->render('tricks/tricksForm.html.twig',
         [
             'form' => $form->createView(),
             'formGroup' => $formGroup->createView(),
+            'frontImage' => $formFront->createView(),
             'isEdit' => true,
             'tricks' => $item
         ]);

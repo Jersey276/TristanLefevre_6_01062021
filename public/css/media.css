@@ -1,0 +1,20 @@
+.media-img {
+  height: inherit;
+  width: inherit;
+  min-width: 200px;
+  min-height: auto;
+  margin: 0;
+}
+
+.media-card {
+  height: auto;
+  width: 8rem;
+}
+
+.media-video {
+  height: 100%;
+  text-align: center;
+  object-fit: fill;
+  min-width: 200px;
+  min-height: auto;
+}

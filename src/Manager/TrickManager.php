@@ -3,15 +3,17 @@
 namespace App\Manager;
 
 use App\Entity\Trick;
+use App\Service\FileService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TrickManager extends AbstractManager
 {
 
-    public function __construct(EntityManagerInterface $doctrine)
+    public function __construct(EntityManagerInterface $doctrine, FileService $fileService)
     {
         $this->doctrine = $doctrine;
+        $this->fileService = $fileService;
     }
 
     public function save(Trick $trick) : void
@@ -29,6 +31,7 @@ class TrickManager extends AbstractManager
 
     public function delete(Trick $trick) : void
     {
+        $this->fileService->remove('/images/trick/'.$trick->getId());
         $this->doctrine->remove($trick);
         $this->doctrine->flush();
     }
