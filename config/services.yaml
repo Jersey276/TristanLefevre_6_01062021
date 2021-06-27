@@ -27,3 +27,11 @@ services:
     App\Service\FileService:
         arguments:
             $targetDirectory: '%file_directory%'
+
+
+    App\Service\MailServiceSubscriber:
+        tags:
+            - { name: changeEmail.update, event: EmailEvent, method: sendValidationMail }
+            - { name: register.newEmail, event: EmailEvent, method: sendEmailUpdateMail }
+            - { name: login.emailRecall, event: EmailEvent, method: sendRecallValidationMail }
+            - { name: login.changePassword, event: EmailEvent, method: sendChangePasswordMail }
