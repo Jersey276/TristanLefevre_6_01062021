@@ -3,16 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Media;
-use App\Entity\MediaType;
 use App\Entity\Trick;
 use App\Manager\MediaManager;
-use App\Repository\MediaRepository;
 use App\Repository\MediaTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 class MediaController extends AbstractController
 {

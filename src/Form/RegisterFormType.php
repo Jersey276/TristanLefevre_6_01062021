@@ -38,15 +38,9 @@ class RegisterFormType extends AbstractType
                 'type' => PasswordType::class,
                 'first_options' => [
                     'label' => 'Password',
-                    'attr' => [
-                        'class' => 'form-control'
-                    ]
                 ],
                 'second_options' => [
                     'label' => 'Confirm Password',
-                    'attr' => [
-                        'class' => 'form-control'
-                    ]
                 ]
             ])
             ->add('register', SubmitType::class, [
