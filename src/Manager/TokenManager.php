@@ -4,19 +4,20 @@ namespace App\Manager;
 
 use App\Entity\Token;
 use App\Entity\User;
+use App\Event\EmailEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TokenManager extends AbstractManager
 {
 
-    public function __construct(EntityManagerInterface $doctrine)
+    public function __construct(EntityManagerInterface $doctrine, EventDispatcherInterface $eventDispatcher)
     {
         $this->doctrine = $doctrine;
+        $this->eventDispatcher = $eventDispatcher;
     }
-    public function sendToken(String $search, MailerInterface $mailer, String $type) : bool
+    public function sendToken(String $search, String $type) : mixed
     {
         $token = new Token();
         $token->setToken();
@@ -38,28 +39,16 @@ class TokenManager extends AbstractManager
         $token->setIdUser($user->getId());
         $this->doctrine->persist($token);
         $this->doctrine->flush();
-        $mail = (new TemplatedEmail());
+        $event = new EmailEvent($user->getEmail(),$token->getToken());
         switch ($type) {
             case "email":
-                $mail->from($user->getEmail())
-                ->to("no-reply@tristan-lefevre.fr")
-                ->subject("Confirmer l'adresse mail")
-                ->htmlTemplate("email/validEmail.html.twig")
-                ->context([
-                    'link' => '/verify_email/'. $token->getToken()
-                ]);
-                break;
+                $this->eventDispatcher->dispatch($event, $event::NAME_NEW_ACCOUNT);
             case "password":
-                $mail->from($user->getEmail())
-                ->to("no-reply@tristan-lefevre.fr")
-                ->subject("Changer le mot de passe")
-                ->htmlTemplate("email/changePassword.html.twig")
-                ->context([
-                    'link' => '/reset_password/'. $token->getToken()
-                ]);
+                $this->eventDispatcher->dispatch($event, $event::NAME_NEW_PWD);
                 break;
+            default :
+                return false;
         }
-        $mailer->send($mail);
         return true;
     }
 
@@ -91,5 +80,16 @@ class TokenManager extends AbstractManager
             return true;
         }
         return false;
+    }
+
+    public function generateToken(User $user, String $type) : token
+    {
+        $token = new Token;
+        $token->setToken();
+        $token->setType($type);
+        $token->setIdUser($user->getId());
+        $this->doctrine->persist($token);
+        $this->doctrine->flush();
+        return $token;
     }
 }

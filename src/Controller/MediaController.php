@@ -3,20 +3,23 @@
 namespace App\Controller;
 
 use App\Entity\Media;
-use App\Entity\MediaType;
 use App\Entity\Trick;
 use App\Manager\MediaManager;
+use App\Repository\MediaTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 class MediaController extends AbstractController
 {
 
     /**
      * @Route("/tricks/{id}/media/remove_front/", name="remove_front")
+     * @IsGranted("ROLE_USER")
      */
     public function removeFront(Trick $item, MediaManager $manager) : Response
     {
@@ -26,15 +29,12 @@ class MediaController extends AbstractController
 
     /**
      * @Route("/tricks/{id}/media/add", name="add_media")
+     * @IsGranted("ROLE_USER")
      */
-    public function addMedia(Request $request, Trick $item, MediaManager $manager) : Response
+    public function addMedia(Request $request, Trick $item, MediaTypeRepository $mediaTypeRepo, MediaManager $manager) : Response
     {
-        $type = ($this->getDoctrine()
-            ->getManager()
-            ->find(
-                MediaType::class,
-                $request->request->get('type')
-            ))->getName();
+        $type = ($mediaTypeRepo->find($request->request->get('type')))->getName();
+
         if ($type == "image") {
             if ($manager->addImage($item, $request->files->get('path'), $request->request->get('type'))) {
                 $this->addFlash('notice', 'Media rajouté');
@@ -55,15 +55,11 @@ class MediaController extends AbstractController
     /**
      * @Route("/tricks/{id}/media/modify/{media_id}", name="modify_media")
      * @ParamConverter("media", options={"id" = "media_id"})
+     * @IsGranted("ROLE_USER")
      */
-    public function ModifyMedia(Request $request, Trick $item, Media $media, MediaManager $manager) : Response
+    public function ModifyMedia(Request $request, Trick $item, Media $media, MediaManager $manager, MediaTypeRepository $mediaTypeRepo) : Response
     {
-        $type = ($this->getDoctrine()
-        ->getManager()
-        ->find(
-            MediaType::class,
-            $request->request->get('type')
-        ))->getName();
+        $type = ($mediaTypeRepo->find($request->request->get('type')))->getName();
         if ($type == "image") {
             if ($manager->ChangeImage($item, $media, $request->files->get('path'))) {
                 $this->addFlash('notice', 'Media mis à jour');
@@ -84,6 +80,7 @@ class MediaController extends AbstractController
     /**
      * @Route("/tricks/{id}/media/remove/{media_id}", name="remove_media")
      * @ParamConverter("media", options={"id" = "media_id"})
+     * @IsGranted("ROLE_USER")
      */
     public function removeMedia(Trick $item, Media $media, MediaManager $manager) : Response
     {
@@ -99,6 +96,7 @@ class MediaController extends AbstractController
     /**
      * @Route("/tricks/{id}/media/set_front/{media_id}", name="media_set_Front")
      * @ParamConverter("media", options={"id" = "media_id"})
+     * @IsGranted("ROLE_USER")
      */
     public function setFrontWithMedia(Trick $item, Media $media, MediaManager $manager) : Response
     {
