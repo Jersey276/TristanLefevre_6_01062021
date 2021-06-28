@@ -231,10 +231,19 @@ class Trick
 
     public function getFront(): ?Media
     {
+        return $this->front;
+    }
+
+    public function getFrontPath(): ?String
+    {
         if (isset($this->front)) {
-            return $this->front;
+            return $this->front->getPath();
         }
-        return null;
+        $media = $this->getFirstMedia('image');
+        if ($media != null){
+            return $media->getPath();
+        }
+        return '/images/trick/default.png';
     }
 
     public function setFront(?Media $front): self

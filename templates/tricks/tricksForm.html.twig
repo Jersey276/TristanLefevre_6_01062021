@@ -31,13 +31,7 @@
 					</a>
 				</div>
 			{% endif %}
-			{% if (tricks is defined) and ( tricks.getFront() != null) %}
-				<img id="frontpath" class="w-100" src="{{ tricks.getFront.getPath() }}" style="height : 25rem">
-			{% elseif (tricks is defined) and ( tricks.getMedias() != [] ) %}
-				<img id="frontpath" class="w-100" src="{{ tricks.getFirstMedia('image').getPath() }}" style="height : 25rem">
-			{% else %}
-				<img id="frontpath" class="w-100" src="/images/trick/default.png" style="height : 25rem">
-			{% endif %}
+			<img id="frontpath" class="w-100" src="{{ tricks.getFrontPath() }}" style="height: 25rem;">
 		{% if isEdit %}
 			<h1 class="h3 mb-3 font-weight-normal">Modifier la figure</h1>
 			<div class="row row-cols-1 row-cols-md-6 g-4" id="MediaList">
