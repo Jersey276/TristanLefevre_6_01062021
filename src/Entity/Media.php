@@ -79,7 +79,7 @@ class Media
         return '/tricks/'. $this->getTrick()->getId() . '/media/remove/' . $this->getId();
     }
 
-    //functions for Video pnly
+    //functions for Video only
     public function getThumbnails() : ?string
     {
         if ($this->getType()->getName() == 'video') {
