@@ -2,28 +2,32 @@
 
 namespace App\Controller;
 
+use App\Entity\Trick;
+use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CommentController extends AbstractController
 {
+    const LIMIT = 4 ;
     /**
-     * @Route("/comment", name= "comment")
+     * @Route("tricks/{id}/comment", name= "comment")
      */
-    public function index(): Response
+    public function index(Request $request, Trick $item, CommentRepository $commentRepository): Response
     {
-        return $this->render('comment/index.html.twig', [
-            'controller_name' => 'CommentController',
-        ]);
-    }
+        $offset = $request->query->getInt('offset');
+        $comments = $commentRepository->findBy(['Tricks' => $item->getId()],['id' => 'DESC'], self::LIMIT, $offset*self::LIMIT);
+        $commentDisplay = [];
+        foreach ($comments as $comment) {
+            $commentDisplay[] = $this->renderView('comment/card.html.twig', ['comment' => $comment]);
+        }
 
-    /**
-     * @Route("/comment/{ask}", name="comment_ask_more")
-     */
-    public function loadMode(int $ask): String
-    {
-        return print
-        print_r("commentaire ". ($ask * 8 - 7) . " à " . ($ask * 8));
+        return $this->json([
+            'offset' => $offset + 1,
+            'nbToken' => ($request->query->getInt('nbToken')) - self::LIMIT,
+            'comment' => $commentDisplay
+        ]);
     }
 }

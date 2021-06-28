@@ -65,26 +65,14 @@
 			</div>
 			{{ form_end(form) }}
 		{% endif %}
-		<ul class="list-group list-group-flush">
-			{% for comment in tricks.getComments() %}
-			<li class="list-group-item">
-				<div class="d-flex flex-row">
-				    {% if (comment.getUser()).getAvatar() != null %}
-        				<img class="rounded-circle" src="{{(comment.getUser()).getAvatar() }}" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
-					{% else %}
-				        <img class="rounded-circle" src="/images/avatar/default.png" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
-    				{% endif %}
-					<div class="flex-grow-1 d-flex flex-column justify-content-between">
-						<div class="d-flex flex-row justify-content-between">
-							<h5>{{ (comment.getUser()).getUserName() }}</h5>
-							<p>{{ (comment.getCreatedAt()|date('d/m/Y h:i'))}}</p>
-						</div>
-						<p>{{ comment.getText()}}</p>
-					</div>
-				</div>
-			</li>
+		<ul id='comment-list' class="list-group list-group-flush">
+			{% for comment in comments %}
+				{{ include('/comment/card.html.twig')}}
 			{% endfor %}
 		</ul>
+	{% if nbToken > 0 %}
+		<button class="btn btn-primary text-center" id="btnShowMore">show more</button>
+	{% endif %}
 	</div>
 	<!--Modal-->
 	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -135,6 +123,29 @@
 		}
 		myModal.toggle();
 
+	});
+
+var offset = {{ offset }};
+var nbToken = {{ nbToken }};
+
+	$("#btnShowMore").click(function (e) {
+		$.ajax({
+			url: {{ tricks.getId() }}+'/comment',
+			type: 'Get',
+			data: { 'nbToken' : nbToken,
+					'offset' : offset },
+			success: function(e) {
+				console.log(e);
+				offset = e.offset;
+				nbToken = e.nbToken;
+				for([index, comment] of e.comment.entries()) {
+					$("#comment-list").append(comment);
+				};
+				if (nbToken <= 0) {
+					$('#btnShowMore').remove();
+				};
+			}
+		});
 	});
 </script>
 {% endblock %}

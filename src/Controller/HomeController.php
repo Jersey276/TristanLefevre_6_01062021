@@ -33,8 +33,8 @@ class HomeController extends AbstractController
         }
 
         return $this->json([
-            'offset' => $base++,
-            'nbToken' => ($request->query->get('nbToken')) - 5,
+            'offset' => $base + 1,
+            'nbToken' => ($request->query->getInt('nbToken')) - 5,
             'tricks' => $tricksDisplay
         ]);
     }

@@ -21,11 +21,7 @@
     <hr>
     <h2>Avatar</h2>
     <div class="d-flex flex-row justify-content-between">
-    {% if user.getAvatar() != null %}
         <img class="rounded-circle" src="{{user.getAvatar()}}" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
-    {% else %}
-        <img class="rounded-circle" src="/images/avatar/default.png" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
-    {% endif %}
         <div class="align-self-center d-flex d-flex-column align-content-center">
             {{ form_start(avatar_form) }}
                 {{ form_errors(avatar_form) }}

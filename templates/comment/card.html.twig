@@ -1,0 +1,12 @@
+<li class="list-group-item">
+    <div class="d-flex flex-row">
+        <img class="rounded-circle" src="{{(comment.getUser()).getAvatar() }}" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
+        <div class="flex-grow-1 d-flex flex-column justify-content-between">
+            <div class="d-flex flex-row justify-content-between">
+                <h5>{{ (comment.getUser()).getUserName() }}</h5>
+                <p>{{ (comment.getCreatedAt()|date('d/m/Y h:i'))}}</p>
+            </div>
+            <p>{{ comment.getText()}}</p>
+        </div>
+    </div>
+</li>
