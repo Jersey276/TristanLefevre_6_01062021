@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			{% if label == "notice" %}
+				<div class="alert alert-success">
+			{% else %}
+				<div class="alert alert-{{ label }}">
+			{% endif %}
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endfor %}
+
+<div class="container">
+    <h1>Profil de {{ user.getUsername() }}</h1>
+    <hr>
+    <h2>Avatar</h2>
+    <div class="d-flex flex-row justify-content-between">
+    {% if user.getAvatar() != null %}
+        <img class="rounded-circle" src="{{user.getAvatar()}}" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
+    {% else %}
+        <img class="rounded-circle" src="/images/avatar/default.png" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
+    {% endif %}
+        <div class="align-self-center d-flex d-flex-column align-content-center">
+            {{ form_start(avatar_form) }}
+                {{ form_errors(avatar_form) }}
+                <div class="input-group">
+                    {{ form_widget(avatar_form.avatar) }}
+                    {{ form_widget(avatar_form.submit)}}
+                </div>
+            {{ form_end(avatar_form) }}
+        </div>
+    </div>
+    <hr>
+    <h2>Mot de passe</h2>
+    {{ form_start(password_form) }}
+        {{ form_errors(password_form) }}
+
+
+        <div class="input-group mb-3">
+            <div class="input-group-text">
+            {{ form_label(password_form.password.first)}}
+            </div>
+            {{ form_widget(password_form.password.first) }}
+        </div>
+        <div class="input-group">
+            <div class="input-group-text">
+                {{ form_label(password_form.password.second)}}
+            </div>
+                {{ form_widget(password_form.password.second) }}
+            {{ form_widget(password_form.update)}}
+        </div>
+        {{ form_errors(password_form.password)}}
+    {{ form_end(password_form) }}
+    <hr>
+    <h2> Adresse mail</h2>
+    <div class="alert alert-warning">
+        Votre compte devra être vérifié de nouveau.<br>
+        Un email vous sera envoyé.
+    </div>
+    {{ form_start(email_form) }}
+        <div class="input-group">
+            <div class="input-group-text">
+                {{form_label(email_form.email) }}
+            </div>
+            {{ form_widget(email_form.email) }}
+            {{ form_widget(email_form.submit) }}
+        </div>
+    {{ form_end(email_form) }}
+    <hr>
+    <h2>Supprimer le compte</h2>
+    <div class="alert alert-danger">
+        <strong class="text-width-bold">! Supprimer votre compte est une opération irréversible !</strong><br>
+        Vos commentaires à travers les différentes figures seront supprimer
+    </div>
+    <button class="btn btn-danger" data-bs-target="#DeleteModal" data-bs-toggle="modal">Supprimer le compte</button>
+</div>
+    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Etes-vous sûr de vouloir supprimer votre compte?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    cette opération est irréversible et tous vos commentaires seront supprimées</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Non</button>
+                    <a id="deleteConfirm" href="/profile/remove" type="button" class="btn btn-danger">Oui</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -53,6 +53,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $comments;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private string $avatar;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -192,6 +197,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $comment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        if (isset($this->avatar)) {
+            return $this->avatar;
+        }
+        return null;
+    }
+
+    public function setAvatar(string $avatar): self
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }
