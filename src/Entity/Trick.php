@@ -186,9 +186,12 @@ class Trick
     /**
      * @return Collection|Media[]
      */
-    public function getMedias(): Collection
+    public function getMedias(): ?Collection
     {
-        return $this->medias;
+        if (count($this->medias) > 0) {
+            return $this->medias;
+        }
+        return null;
     }
 
     public function addMedia(Media $media): self
@@ -216,10 +219,11 @@ class Trick
     public function getFirstMedia(string $type) : ?Media
     {
         $medias = $this->getMedias();
-
-        foreach ($medias as $media) {
-            if ($media->getType()->getName() == $type) {
-                return $media;
+        if ($medias != null) {
+            foreach ($medias as $media) {
+                if ($media->getType()->getName() == $type) {
+                    return $media;
+                }
             }
         }
         return null;

@@ -21,8 +21,7 @@ class TrickFrontType extends AbstractType
                 'class' => Media::class,
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('media')
-                        ->join(MediaType::class,'type','media.type_id = type.id')
-                        ->where("type.name = 'image'")
+                        ->where("media.type = 1")
                         ->orderBy('media.id', 'ASC');
                 },
                 'choice_label' => 'path',
