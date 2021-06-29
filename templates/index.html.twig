@@ -6,23 +6,36 @@
 {% block body %}
 
 <div class="position-relative">
-	<img id="scroll-home" class="w-100 h-auto" src="https://images4.alphacoders.com/183/183974.jpg" style="object-fit: cover;">
-	<div class="position-absolute" style="bottom : 10vw ; right : 20px;">
-		<a class="sticky-bottom" href="#scroll-article">arrow</a>
+	<img id="scroll-home" class="w-100 vh-100" src="https://images4.alphacoders.com/183/183974.jpg" style="object-fit: cover;">
+	<div class="position-absolute bottom-5vw" style="bottom : 7% ; right : 20px;">
+		<a class="sticky-bottom link-dark fw-bolder" href="#scroll-article">
+			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" stroke="black" stroke-width="1"/>
+			</svg>
+		</a>
 	</div>
 </div>
-<div class="container" id="scroll-article" style="height : 3000 px;">
-	<div id="trick-list" class="row row-cols-1 row-cols-md-5 g-4">
+<div class="container" id="scroll-article">
+	<div id="trick-list" class="mt-1 row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
 		{% for trick in tricks %}
 			{{ include('tricks/card.html.twig')}}
 		{% endfor %}
 	</div>
 	{% if nbToken > 0 %}
-		<button class="btn btn-primary text-center" id="btnShowMore">show more</button>
+	<div class="w-100 text-center my-3">
+		<button class="btn btn-primary" id="btnShowMore">show more</button>
+	</div>
+	<div class="w-100 text-end my-3">
+		<a id="link-scroll-home" class="link-dark fw-bolder d-none" href="#scroll-home">
+			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" stroke="black" stroke-width="1"/>
+			</svg>
+		</a>
+	</div>
 	{% endif %}
 </div>
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -62,6 +75,7 @@ $("#btnShowMore").click(function (e) {
 			for([index, trick] of e.tricks.entries()) {
 				$("#trick-list").append(trick);
 			};
+			$('#link-scroll-home').removeClass('d-none');
 			if (nbToken <= 0) {
 				$('#btnShowMore').remove();
 			}
