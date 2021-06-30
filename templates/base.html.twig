@@ -58,7 +58,7 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="vh-100">
+		<div>
             {{ include('flash.html.twig') }}
             {% block body %}{% endblock %}
 			<div class="d-md-none" style="height: 70px;"></div>
@@ -68,8 +68,8 @@
 				</div>
 			</div>
 		</div>
-		<footer class="position-fixed bottom-0 vw-100">
-			<nav class="navbar d-block d-md-none navbar-expand navbar-dark bg-dark py-0">
+		<footer class="position-fixed d-md-none bottom-0 vw-100" style="z-index:10">
+			<nav class="navbar d-block navbar-expand navbar-dark bg-dark py-0">
 				<div class="container-fluid">
 					<ul class="nav navbar-nav me-auto mb-0 mb-lg-0 w-100">
 						<li class="nav-item mx-auto">
