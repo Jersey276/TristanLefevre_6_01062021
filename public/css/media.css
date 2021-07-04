@@ -20,7 +20,8 @@
   height: 180px;
 }
 
-.media-display div, .media-display img {
+.media-display div,
+.media-display img {
   width: 200px;
   height: 180px;
   position: absolute;
@@ -44,7 +45,7 @@
   color: #888;
   top: 50%;
   left: 50%;
-  transform : translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 iframe {
@@ -56,4 +57,3 @@ iframe {
 .media-video-front:hover {
   opacity: 0.9;
 }
-

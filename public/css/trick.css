@@ -7,15 +7,16 @@
   .trick-data {
     width: 100% !important;
   }
- 
-  .comment-text p, .comment-header p, .trick-desc-data span {
+
+  .comment-text p,
+  .comment-header p,
+  .trick-desc-data span {
     font-size: 0.75rem !important;
   }
 
   .comment-header h5 {
     font-size: 1rem;
   }
-   
 }
 
 h1 {
@@ -27,9 +28,11 @@ h1 {
 }
 
 .trick-data {
-  width:75%;
+  width: 75%;
 }
 
-.comment-text p, .comment-header p .comment-header h5{
+.comment-text p,
+.comment-header p,
+.comment-header h5 {
   font-size: inherit;
 }
