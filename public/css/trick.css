@@ -1,34 +1,35 @@
 @media (max-width: 767.98px) {
-    .comment-avatar {
-        max-width: 4rem;
-        max-height: 4rem;
-    }
+  .comment-avatar {
+    max-width: 4rem;
+    max-height: 4rem;
+  }
 
-    .trick-data {
-        width: 100% !important;
-    }
+  .trick-data {
+    width: 100% !important;
+  }
  
   .comment-text p, .comment-header p, .trick-desc-data span {
     font-size: 0.75rem !important;
   }
 
   .comment-header h5 {
-      font-size: 1rem;
+    font-size: 1rem;
   }
    
 }
+
 h1 {
-    mix-blend-mode: color-burn;
+  mix-blend-mode: color-burn;
 }
 
 .comment-avatar {
-    width: 100px;
+  width: 100px;
 }
 
 .trick-data {
-    width:75%;
+  width:75%;
 }
 
 .comment-text p, .comment-header p .comment-header h5{
-    font-size: inherit;
+  font-size: inherit;
 }

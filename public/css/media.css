@@ -12,7 +12,6 @@
     width: 100vw;
     height: 56.25vw !important;
   }
-
 }
 
 .media-display {
@@ -33,30 +32,28 @@
   z-index: 0;
 }
 
-
 .media-video-front {
-  opacity : 0.4;
-
-  background-color : #555555;
-  z-index : 3;
+  opacity: 0.4;
+  background-color: #555;
+  z-index: 3;
   transition: opacity 500ms;
 }
 
 .media-video-front svg {
-  position:absolute;
-  color : #888888;
+  position: absolute;
+  color: #888;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform : translate(-50%, -50%);
 }
 
 iframe {
-  align-self:center;
+  align-self: center;
   width: 780px;
   height: calc(767.98px * 0.5628205128205128);
 }
 
 .media-video-front:hover {
-  opacity : 0.9;
+  opacity: 0.9;
 }
 
