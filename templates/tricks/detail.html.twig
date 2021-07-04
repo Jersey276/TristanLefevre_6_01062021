@@ -29,7 +29,7 @@
 			<button class="btn btn-primary align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#media-collapse" id="displayMedia">afficher media</button>
 		</div>
 		<div class="navbar navbar-expand-md my-3">
-			<div id="media-collapse" class="collapse navbar-collapse row row-cols-1 justify-content-center justify-content-md-start row-cols-md-3 row-cols-lg-6 g-2 g-lg-3">
+			<div id="media-collapse" class="collapse navbar-collapse row row-cols-1 justify-content-center justify-content-md-start align-items-stretch row-cols-md-3 row-cols-lg-6 g-2 g-lg-3">
 				{% for media in tricks.getMedias() %}
 					{{ include('/media/cardDisplay.html.twig') }}
 				{% endfor %}
