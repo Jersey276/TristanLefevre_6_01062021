@@ -76,9 +76,10 @@ class UserManager extends AbstractManager
     {
         try {
             $oldUser = $this->doctrine->getRepository(User::class)->find($user->getId());
-            if (isset($oldUser) &&$oldUser->getEmail() == $user->getEmail()) {
-                $user->setIsEmailCheck(false);
+            if (!isset($oldUser) || $oldUser->getEmail() == $user->getEmail()) {
+                return false;
             }
+            $user->setIsEmailCheck(false);
             $this->doctrine->flush();
             $token = $this->tm->generateToken($user, 'email');
             $event = new EmailEvent($user->getEmail(), $token->getToken());
