@@ -20,3 +20,15 @@ Submit : Valider
 selectionner un média pour la une : Séléctionner une image pour la une
 Update : Mettre à jour
 Register : S'inscrire
+auth :
+  forgotpassword : Mot de passe oublié?
+  changepassword : Changer le mot de passe
+  login : Se connecter
+  register : S'inscrire
+  pseudo : Identifiant
+  password : Mot de passe
+header :
+  home : Acceuil
+  tricks : Nouvelle figure
+  login : Se connecter
+  logup : S'inscrire
