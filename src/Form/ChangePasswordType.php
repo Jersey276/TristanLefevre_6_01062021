@@ -21,19 +21,20 @@ class ChangePasswordType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
-                    'label' => 'Password',
+                    'label' => 'auth.password',
                     'attr' => [
                         'class' => 'form-control'
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Confirm Password',
+                    'label' => 'auth.confirmpassword.confirm',
                     'attr' => [
                         'class' => 'form-control'
                     ]
                 ]
             ])
             ->add('changePassword', SubmitType ::class, [
+                'label' => 'auth.confirmpassword.submit',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]

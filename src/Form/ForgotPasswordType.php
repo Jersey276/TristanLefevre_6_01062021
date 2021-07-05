@@ -19,7 +19,7 @@ class ForgotPasswordType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'adresse mail du compte',
+                'label' => 'auth.forgetpassword.email',
                 'attr' => [
                     "class" => "form-control"
                 ],
@@ -30,6 +30,7 @@ class ForgotPasswordType extends AbstractType
                 ]
             ])
             ->add('resetPassword', SubmitType::class, [
+                'label' => 'auth.forgetpassword.submit',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ] 

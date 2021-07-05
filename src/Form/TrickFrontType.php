@@ -18,6 +18,7 @@ class TrickFrontType extends AbstractType
     {
         $builder
             ->add('front', EntityType::class, [
+                'label' => 'trick.front.front',
                 'class' => Media::class,
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('media')
@@ -25,9 +26,11 @@ class TrickFrontType extends AbstractType
                         ->orderBy('media.id', 'ASC');
                 },
                 'choice_label' => 'path',
-                'placeholder' => 'selectionner un média pour la une'
+                'placeholder' => 'trick.front.placeholder'
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class, [
+                'label' => 'trick.front.submit'
+            ])
         ;
     }
 
