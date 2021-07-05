@@ -23,13 +23,13 @@ class RegisterFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'Email',
+                'label' => 'auth.email',
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('username', TextType::class, [
-                'label' => 'Pseudonyme',
+                'label' => 'auth.pseudonyme',
                 'attr' => [
                     'class' => 'form-control'
                 ]
@@ -37,13 +37,14 @@ class RegisterFormType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
-                    'label' => 'Password',
+                    'label' => 'auth.password',
                 ],
                 'second_options' => [
-                    'label' => 'Confirm Password',
+                    'label' => 'auth.changepassword.confirm',
                 ]
             ])
             ->add('register', SubmitType::class, [
+                'label' => 'auth.register.title',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]

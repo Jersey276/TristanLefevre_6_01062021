@@ -17,7 +17,7 @@ class TrickGroupType extends AbstractType
         $builder
             ->add('nameGroup', TextType::class,
             [
-                'label' => 'Nom du groupe',
+                'label' => 'trick.group.title',
                 'row_attr' => [
                     'class' => 'form-group'
                 ],
@@ -28,7 +28,8 @@ class TrickGroupType extends AbstractType
                     'message' => 'Veuiller nommer la nouvelle catégorie'
                 ]),
             ])
-            ->add('Envoyer', SubmitType::class, [
+            ->add('submit', SubmitType::class, [
+                'label' => 'general.submit',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]

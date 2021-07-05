@@ -18,19 +18,20 @@ class ProfilePasswordFormType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
-                    'label' => 'Password',
+                    'label' => 'auth.password',
                     'label_attr' => [
                         'class' => 'input_group_text mb-0'
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Confirm Password',
+                    'label' => 'auth.changepassword.confirm',
                     'label_attr' => [
                         'class' => 'input_group_text mb-0'
                     ]
                 ]
             ])
             ->add('update', SubmitType::class, [
+                'label' => 'auth.changepassword.submit',
                 'attr' => [
                     'class' => 'btn btn-outline-success'
                 ]

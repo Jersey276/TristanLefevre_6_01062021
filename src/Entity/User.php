@@ -201,12 +201,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getAvatar(): string
     {
         if (isset($this->avatar)) {
             return $this->avatar;
         }
-        return null;
+        return "/images/avatar/default.png";
     }
 
     public function setAvatar(string $avatar): self

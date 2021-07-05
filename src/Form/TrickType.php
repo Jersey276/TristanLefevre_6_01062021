@@ -19,19 +19,19 @@ class TrickType extends AbstractType
     {
         $builder
             ->add('title', TypeTextType::class, [
-                'label' => 'Nom de la figure'
+                'label' => 'trick.name'
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description'
+                'label' => 'trick.description'
             ])
             ->add('trickGroup', EntityType::class, [
-                'label' => 'Catégorie',
+                'label' => 'trick.group.title',
                 'class' => TrickGroup::class,
                 'choice_label' => 'nameGroup',
-                'placeholder' => 'Veuiller choisir une catégorie',
+                'placeholder' => 'trick.group.placeholder',
                 'constraints' => [
                     new NotNull([
-                        'message' => 'Veuiller choisir une catégorie',
+                        'message' => 'trick.group.placeholder',
                     ])
                 ]
             ])

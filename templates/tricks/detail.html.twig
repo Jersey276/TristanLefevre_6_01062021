@@ -1,22 +1,13 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
 	<link rel="stylesheet" href="/css/media.css">
+	<link rel="stylesheet" href="/css/trick.css">
+	<link rel="stylesheet" href="/css/auth.css">
 {% endblock %}
 {% block title %} {{tricks.getTitle()}} {% endblock %}
 
 {% block body %}
-	{% for label, messages in app.flashes %}
-		{% for message in messages %}
-			{% if label == "notice" %}
-				<div class="alert alert-success">
-			{% else %}
-				<div class="alert alert-{{ label }}">
-			{% endif %}
-				{{ message }}
-			</div>
-		{% endfor %}
-	{% endfor %}
-	<div class="container my-5">
+	<div class="container p-0 bg-white border rounded-top my-0 my-md-5 d-flex flex-column">
 		<div class="position-relative">
 			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 				<div class="position-absolute border bg-white d-flex flex-row" style="top : 10px; right : 10px;">
@@ -32,66 +23,56 @@
 					</button>
 				</div>
 			{% endif %}
-			<h1 class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"> {{ tricks.getTitle() }}</h1>
-			{% if (tricks is defined) and ((tricks.getFront() != null) ) %}
-				<img id="frontpath" class="w-100" src="{{ tricks.getFront.getPath() }}" style="height : 25rem">
-			{% elseif (tricks is defined) and ( tricks.getMedias() != [] ) %}
-				<img id="frontpath" class="w-100" src="{{ tricks.getFirstMedia('image').getPath() }}" style="height : 25rem">
-			{% else %}
-				<img id="frontpath" class="w-100" src="/images/trick/default.png" style="height : 25rem">
-			{% endif %}
+			<h1 class="position-absolute centered trick-h1-display" style=""> {{ tricks.getTitle() }}</h1>
+			<img id="frontpath" class="w-100 rounded-top" src="{{ tricks.getFrontPath() }}" style="height: 50vh; object-fill:cover">
 		</div>
-		<div class="my-3 align-items-center row row-cols-1 row-cols-md-6 g-4">
-		{% for media in tricks.getMedias() %}
-				{% if media.getType.getName() == 'image' %}
-					<button class="col btn media-display" data-type="{{ media.getType.getName() }}" data-url="{{ media.getPath() }}">
-					<img class="card-img-top media-img" src="{{media.getPath()}}">
-				{% elseif media.getType.getName() == 'video' %}
-					<button class="col btn media-display" data-type="{{ media.getType.getName() }}" data-url="{{ media.getDisplayUrl() }}">
-					<img class="card-img-top media-video" src="{{media.getThumbnails()}}">
-				{% endif %}
-			</button>
-		{% endfor %}
+		<div class="my-3 d-md-none w-100 text-center">
+			<button class="btn btn-primary align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#media-collapse" id="displayMedia">afficher media</button>
+		</div>
+		<div class="navbar navbar-expand-md my-3">
+			<div id="media-collapse" class="collapse navbar-collapse row row-cols-1 justify-content-center justify-content-md-start align-items-stretch row-cols-md-3 row-cols-lg-6 g-2 g-lg-3">
+				{% for media in tricks.getMedias() %}
+					{{ include('/media/cardDisplay.html.twig') }}
+				{% endfor %}
+			</div>
 		</div>
 		<p> {{ tricks.getDescription()| nl2br }}</p>
-		<div class="d-flex flex-row justify-content-between">
-			<p>{{ (tricks.getTrickGroup()).getNameGroup() }}</p>
-			{{ tricks.getCreatedAt()|date('d/m/Y h:i') }}
-			{% if tricks.isModified() %}
-				{{ tricks.getModifiedAt()|date('d/m/Y h:i') }}
-			{% else %}
-				pas encore modifié
-			{% endif %}
-		</div>
-		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-			{{ form_start(form) }}
-			<div class="d-flex flex-row align-items-center">
-				{{ form_widget(form.text, { 'attr' : { 'row' : 1 }}) }}
-				{{ form_row(form.submit) }}
+		<div class="trick-data align-self-center">
+			<div class="trick-desc-data d-flex flex-row justify-content-around pb-3">
+				<span class="border border-dark py-2 px-3 rounded">{{ (tricks.getTrickGroup()).getNameGroup() }}</span>
+				<span class="border border-dark py-2 px-3 rounded">{{ tricks.getCreatedAt()|date('d/m/Y h:i') }}</span>
+				{% if tricks.isModified() %}
+					<span class="border border-dark py-2 px-3 rounded">{{ tricks.getModifiedAt()|date('d/m/Y h:i') }}</span>
+				{% else %}
+					<span class="border border-dark py-2 px-3 rounded">pas encore modifié</span>
+				{% endif %}
 			</div>
-			{{ form_end(form) }}
-		{% endif %}
-		<ul class="list-group list-group-flush">
-			{% for comment in tricks.getComments() %}
-			<li class="list-group-item">
-				<div class="d-flex flex-row">
-				    {% if (comment.getUser()).getAvatar() != null %}
-        				<img class="rounded-circle" src="{{(comment.getUser()).getAvatar() }}" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
-					{% else %}
-				        <img class="rounded-circle" src="/images/avatar/default.png" style=" height : 10rem; width auto; min-height: 500px, min-width:auto">
-    				{% endif %}
-					<div class="flex-grow-1 d-flex flex-column justify-content-between">
-						<div class="d-flex flex-row justify-content-between">
-							<h5>{{ (comment.getUser()).getUserName() }}</h5>
-							<p>{{ (comment.getCreatedAt()|date('d/m/Y h:i'))}}</p>
-						</div>
-						<p>{{ comment.getText()}}</p>
-					</div>
+			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+				<hr>
+				{{ form_start(form) }}
+				{{ form_errors(form)}}
+				<div class="d-flex flex-row align-items-stratch">
+					{{ form_widget(form.text, { 'attr' : {'style' : 'resize : none; height: auto;'}}) }}
+					{{ form_widget(form.submit) }}
 				</div>
-			</li>
-			{% endfor %}
-		</ul>
-	</div>
+				{{ form_end(form) }}
+			{% endif %}
+			<hr>
+			<ul id='comment-list' class="list-group list-group-flush">
+				{% for comment in comments %}
+					{{ include('/comment/card.html.twig')}}
+				{% endfor %}
+			</ul>
+			{% if nbToken > 0 %}
+				<div class="w-100 text-center my-3">
+					<button class="btn btn-primary text-center" id="btnShowMore">
+				  		<span class="spinner-border spinner-border-sm" style="display: none;" id="spinnerShowMore" role="status" aria-hidden="true"></span>
+						{% trans %} general.showMore {% endtrans %}
+					</button>
+				</div>
+			{% endif %}
+			</div>
+		</div>
 	<!--Modal-->
 	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 		<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -116,12 +97,14 @@
 		<div class="modal fade" id="MediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content" id="MediaContent">
+					<div class="modal-body">
+					</div>
 				</div>
 			</div>
 		</div>
 
 <script>
-	$('.media-display').click( function(e) {
+	$('.media-display-btn').click( function(e) {
 		var data = e.currentTarget.dataset;
 		var myModal = new bootstrap.Modal(document.getElementById('MediaModal'), {keyboard: false});
 		$('#MediaContent').empty();
@@ -131,16 +114,40 @@
 				break;
 			case 'video' :
 				$('#MediaContent').append(
-					'<iframe width="560" height="315" src="'+ data.url +'" frameborder="0"' +
+					'<iframe width="500" height="281" src="'+ data.url +'" frameborder="0"' +
 					' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 				);
 				break;
 			default :
-				process.exit(1);
-				break;
+				return;
 		}
 		myModal.toggle();
 
+	});
+
+var offset = {{ offset }};
+var nbToken = {{ nbToken }};
+
+	$("#btnShowMore").click(function (e) {
+		$('#spinnerShowMore').show();
+		$.ajax({
+			url: {{ tricks.getId() }}+'/comment',
+			type: 'Get',
+			data: { 'nbToken' : nbToken,
+					'offset' : offset },
+			success: function(e) {
+				console.log(e);
+				offset = e.offset;
+				nbToken = e.nbToken;
+				for([index, comment] of e.comment.entries()) {
+					$("#comment-list").append(comment);
+				};
+				$("#spinnerShowMore").hide();
+				if (nbToken <= 0) {
+					$('#btnShowMore').remove();
+				};
+			}
+		});
 	});
 </script>
 {% endblock %}

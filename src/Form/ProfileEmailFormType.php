@@ -15,11 +15,14 @@ class ProfileEmailFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'label' => 'auth.email',
                 'label_attr' => [
                     'class' => 'mb-0'
                 ]
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class,[
+                'label' => 'profile.email.title'
+            ])
         ;
     }
 

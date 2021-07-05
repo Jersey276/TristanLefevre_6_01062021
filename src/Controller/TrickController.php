@@ -13,6 +13,7 @@ use App\Manager\CommentManager;
 use App\Manager\MediaManager;
 use App\Manager\TrickGroupManager;
 use App\Manager\TrickManager;
+use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -88,7 +89,7 @@ class TrickController extends AbstractController
     /**
      * @Route("/tricks/{id}", name="tricks_detail")
      */
-    public function trickDetail(Request $request, Trick $item, CommentManager $manager) : Response
+    public function trickDetail(Request $request, Trick $item, CommentManager $manager, CommentRepository $commentRepository) : Response
     {
         $arg = [ 'tricks' => $item ];
         if ( $this->isGranted('IS_AUTHENTICATED_FULLY'))
@@ -103,6 +104,9 @@ class TrickController extends AbstractController
             }
             $arg['form']= $form->createView();
         }
+        $arg['comments'] = $commentRepository->findBy(['Tricks' => $item->getId()],['id' => 'DESC'],4);
+        $arg['nbToken'] = $commentRepository->count(['Tricks' => $item->getId()]) - 4;
+        $arg['offset'] = 1;
         return $this->render('tricks/detail.html.twig', $arg);
     }
 
