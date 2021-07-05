@@ -5,6 +5,7 @@ general :
   send : Envoyer
   submit : poster
   showMore : Afficher plus
+  slogan : Le site communautaire pour le snowboard
 auth :
   forgetpassword : 
     title : Mot de passe oublié?

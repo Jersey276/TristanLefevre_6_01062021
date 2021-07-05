@@ -1,12 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!
+{% block stylesheets %}
+	<link rel="stylesheet" href="/css/auth.css">
+{% endblock %}
+{% block title %}Snowtricks
 {% endblock %}
 
 {% block body %}
 
 <div class="position-relative">
 	<img id="scroll-home" class="w-100 vh-100" src="https://images4.alphacoders.com/183/183974.jpg" style="object-fit: cover;">
+	<div class="position-absolute centered" style="z-index : 3">
+		<h1 style="font-weight: bolder; color: white; mix-blend-mode: difference;">{% trans %} general.slogan {% endtrans %}</h1>
+	</div>
 	<div class="position-absolute bottom-5vw" style="bottom : 7% ; right : 20px;">
 		<a class="sticky-bottom link-dark fw-bolder" href="#scroll-article">
 			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
