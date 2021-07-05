@@ -28,6 +28,7 @@ class HomeController extends AbstractController
     public function askMore(Request $request, TrickRepository $trickRepository, int $base) : Response
     {
         $tricks = $trickRepository->findBy([],[],5,$base*5);
+        $tricksDisplay = array();
         foreach ($tricks as $trick) {
             $tricksDisplay[] = $this->renderView('tricks/card.html.twig', ['trick' => $trick]);
         }

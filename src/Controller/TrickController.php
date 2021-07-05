@@ -68,8 +68,8 @@ class TrickController extends AbstractController
      */
     public function trickNewCategory(Request $request, TrickGroupManager $manager) : Response
     {
-        $name = $request->request->get('nameGroup');
-        if (isset($name)) {
+        $name = $request->request->getAlpha('nameGroup');
+        if ($name != '') {
             $tricksGroup = $manager->addTrickGroup($name);
 
             return $this->json(
@@ -99,7 +99,9 @@ class TrickController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid())
             {
-                $newTrick = $manager->save($comment, $item, $this->getUser());
+                /** @var \App\Entity\User $user */
+                $user = $this->getUser();
+                $newTrick = $manager->save($comment, $item, $user);
                 $arg['tricks'] = $newTrick;
             }
             $arg['form']= $form->createView();

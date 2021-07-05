@@ -6,6 +6,7 @@ use App\Form\ProfileAvatarFormType;
 use App\Form\ProfileEmailFormType;
 use App\Form\ProfilePasswordFormType;
 use App\Manager\UserManager;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,9 +20,10 @@ class ProfileController extends AbstractController
      * @Route("/profile", name="profile")
      * @IsGranted("ROLE_USER")
      */
-    public function index(Request $request, UserManager $manager): Response
+    public function index(Request $request, UserManager $manager, UserRepository $repository): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         
         //password form
@@ -75,7 +77,9 @@ class ProfileController extends AbstractController
      */
     public function remove(UserManager $manager): Response
     {
-        if($manager->removeUser($this->getUser())) {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if($manager->removeUser($user)) {
             return $this->redirectToRoute('app_logout');
         }
         $this->addFlash('danger', 'la suppression de votre profil n\'a pu se faire, veuiller ressayer');

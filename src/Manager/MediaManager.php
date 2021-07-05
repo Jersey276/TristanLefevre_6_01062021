@@ -42,10 +42,9 @@ class MediaManager extends AbstractManager
         }
     }
 
-    public function addImage(Trick $trick, UploadedFile $file, string $type) : bool
+    public function addImage(Trick $trick, UploadedFile $file, MediaType $type) : bool
     {
-        $mediaType = $this->doctrine->getRepository(MediaType::class)->find($type);
-        if((explode('/',$file->getMimeType()))[0] == $mediaType->getName())
+        if((explode('/',$file->getMimeType()))[0] == $type->getName())
         {
             //upload file into trick folder
             $filepath = $this->fileService->upload($file, '/images/trick/'.$trick->getId() .'/');
@@ -53,7 +52,7 @@ class MediaManager extends AbstractManager
             // create media and fill it
             $media = new Media();
             $media->setPath($filepath);
-            $media->setType($mediaType);
+            $media->setType($type);
             $media->setTrick($trick);
             // send new media info into database
             try {

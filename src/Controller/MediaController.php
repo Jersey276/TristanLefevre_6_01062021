@@ -33,17 +33,17 @@ class MediaController extends AbstractController
      */
     public function addMedia(Request $request, Trick $item, MediaTypeRepository $mediaTypeRepo, MediaManager $manager) : Response
     {
-        $type = ($mediaTypeRepo->find($request->request->get('type')))->getName();
+        $type = ($mediaTypeRepo->find($request->request->getInt('type')));
 
-        if ($type == "image") {
-            if ($manager->addImage($item, $request->files->get('path'), $request->request->get('type'))) {
+        if ($type->getName() == "image") {
+            if ($manager->addImage($item, $request->files->get('path'), $type)) {
                 $this->addFlash('notice', 'Media rajouté');
             } else {
                 $this->addFlash('danger', 'Problème sur la collecte de l\'image');
             }
         }
-        if ($type == "video") {
-            if ($manager->addVideo($item, $request->request->get('path'))) {
+        if ($type->getName() == "video") {
+            if ($manager->addVideo($item, $request->request->filter('path', null, FILTER_SANITIZE_URL))) {
                 $this->addFlash('notice', 'Media rajouté');
             } else {
                 $this->addFlash('danger', 'Problème sur l\insetion de la vidéo');
@@ -68,7 +68,7 @@ class MediaController extends AbstractController
             }
         }
         if ($type == "video") {
-            if ($manager->changeVideo($media, $request->request->get('path'))) {
+            if ($manager->changeVideo($media, $request->request->filter('path', null, FILTER_SANITIZE_URL))) {
                 $this->addFlash('notice', 'Media mis à jour');
             } else {
                 $this->addFlash('danger', 'Problème avec la mise à jour du média');
