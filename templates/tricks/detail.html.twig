@@ -2,11 +2,12 @@
 {% block stylesheets %}
 	<link rel="stylesheet" href="/css/media.css">
 	<link rel="stylesheet" href="/css/trick.css">
+	<link rel="stylesheet" href="/css/auth.css">
 {% endblock %}
 {% block title %} {{tricks.getTitle()}} {% endblock %}
 
 {% block body %}
-	<div class="container my-5 d-flex flex-column">
+	<div class="container p-0 bg-white border rounded-top my-0 my-md-5 d-flex flex-column">
 		<div class="position-relative">
 			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 				<div class="position-absolute border bg-white d-flex flex-row" style="top : 10px; right : 10px;">
@@ -22,8 +23,8 @@
 					</button>
 				</div>
 			{% endif %}
-			<h1 class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"> {{ tricks.getTitle() }}</h1>
-			<img id="frontpath" class="w-100" src="{{ tricks.getFrontPath() }}" style="height: 50vh; object-fill:cover">
+			<h1 class="position-absolute centered trick-h1-display" style=""> {{ tricks.getTitle() }}</h1>
+			<img id="frontpath" class="w-100 rounded-top" src="{{ tricks.getFrontPath() }}" style="height: 50vh; object-fill:cover">
 		</div>
 		<div class="my-3 d-md-none w-100 text-center">
 			<button class="btn btn-primary align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#media-collapse" id="displayMedia">afficher media</button>
@@ -49,9 +50,10 @@
 			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 				<hr>
 				{{ form_start(form) }}
-				<div class="d-flex flex-row align-items-center">
-					{{ form_widget(form.text, { 'attr' : {'style' : 'resize : none;'}}) }}
-					{{ form_row(form.submit) }}
+				{{ form_errors(form)}}
+				<div class="d-flex flex-row align-items-stratch">
+					{{ form_widget(form.text, { 'attr' : {'style' : 'resize : none; height: auto;'}}) }}
+					{{ form_widget(form.submit) }}
 				</div>
 				{{ form_end(form) }}
 			{% endif %}
