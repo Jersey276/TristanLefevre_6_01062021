@@ -2,23 +2,29 @@
 
 {% block title %}S'inscrire{% endblock %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="/css/centered.css">
+{% endblock %}
+
 {% block body %}
-
-<div class="container px-5">
-    <h1 class="h3 mb-3 font-weight-normal">S'inscrire</h1>
-    {{ form_start(form) }}
-        {{ form_errors(form) }}
-
-        <div class="form-group">
-        {{ form_row(form.username) }}
-        </div>
-        <div class="form-group">
-        {{ form_row(form.email) }}
-        </div>
-        <div class="form-group">
-        {{ form_row(form.password) }}
-        </div>
-        {{ form_row(form.register) }}
-    {{ form_end(form) }}
+<div class="container centered w-100 w-md-50 w-lg-25">
+    <h1 class="h3 mb-3 font-weight-normal text-center">S'inscrire</h1>
+    <div class="border px-5 py-2 text-center">
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <div class="d-flex flex-column align-items-center">
+                <div class="form-group">
+                {{ form_row(form.username) }}
+                </div>
+                <div class="form-group">
+                {{ form_row(form.email) }}
+                </div>
+                <div class="form-group">
+                {{ form_row(form.password) }}
+                </div>
+                {{ form_row(form.register) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
 </div>
 {% endblock %}
