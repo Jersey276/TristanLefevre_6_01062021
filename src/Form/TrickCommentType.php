@@ -22,7 +22,7 @@ class TrickCommentType extends AbstractType
                 ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'comment.submit'
+                'label' => 'trick.comment.submit'
             ])
         ;
     }
