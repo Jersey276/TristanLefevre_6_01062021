@@ -6,11 +6,15 @@ use App\Entity\Media;
 use App\Entity\MediaType;
 use App\Entity\Trick;
 use App\Service\FileService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * Manager of Media entity
+ * @author Tristan
+ * @version 1
+ */
 class MediaManager extends AbstractManager
 {
     public function __construct(FileService $fileService, EntityManagerInterface $doctrine)
@@ -19,6 +23,12 @@ class MediaManager extends AbstractManager
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * set new Trick front with specified media
+     * @param Trick $trick concerned Trick
+     * @param Media $media concerned Media
+     * @return bool result
+     */
     public function setFront(Trick $trick, media $media) : bool
     {
         $media = $this->doctrine->find(Media::class, $media);
@@ -30,6 +40,11 @@ class MediaManager extends AbstractManager
         return false;
     }
 
+    /**
+     * remove front from Trick
+     * @param Trick $trick concerned Trick
+     * @return bool result
+     */
     public function removeFront(Trick $trick) : bool
     {
         $trick->setFront(null);
@@ -41,6 +56,13 @@ class MediaManager extends AbstractManager
         }
     }
 
+    /**
+     * Add new image on Trick
+     * @param Trick $trick concerned trick
+     * @param UploadedFile $file new image for trick
+     * @param MediaType $type media type (verification)
+     * @return bool result
+     */
     public function addImage(Trick $trick, UploadedFile $file, MediaType $type) : bool
     {
         $fileType = $file->getMimeType();
@@ -65,6 +87,13 @@ class MediaManager extends AbstractManager
         return false;
     }
 
+    /**
+     * Change image of specific media
+     * @param Trick $trick concerned Trick
+     * @param Media $media concerned Media
+     * @param UploadedFile $file uploaded file
+     * @return bool result
+     */
     public function changeImage(Trick $trick, Media $media, UploadedFile $file) : bool
     {
         if ($media->getType()->getName() == 'image') {
@@ -79,6 +108,11 @@ class MediaManager extends AbstractManager
         }
     }
 
+    /**
+     * remove media
+     * @param Media $media Concerned Media
+     * @return bool result
+     */
     public function removeMedia(Media $media) : bool
     {
         try {
@@ -90,6 +124,12 @@ class MediaManager extends AbstractManager
         }
     }
 
+    /**
+     * add new Video Media on Trick
+     * @param Trick $trick concerned Trick
+     * @param String $url video url
+     * @return bool result
+     */
     public function addVideo(Trick $trick, string $url) : bool
     {
         $media = new Media();
@@ -110,6 +150,12 @@ class MediaManager extends AbstractManager
         return false;
     }
 
+    /**
+     * modify Video Media on Trick
+     * @param Media $media concerned Trick
+     * @param String $url video url
+     * @return bool result
+     */
     public function changeVideo(Media $media, string $url) : bool
     {
         $path = $this->generateVideoUrl($url);
@@ -125,6 +171,11 @@ class MediaManager extends AbstractManager
         return true;
     }
 
+    /**
+     * generate Url
+     * @param String $url video $url
+     * @return string url for media entity
+     */
     private function generateVideoUrl(string $url) : ?string
     {
         list(, , $platform, $id) = explode('/', $url);

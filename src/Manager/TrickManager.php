@@ -7,15 +7,23 @@ use App\Service\FileService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * Manager of Trick entity
+ * @author Tristan
+ * @version 1
+ */
 class TrickManager extends AbstractManager
 {
-
     public function __construct(EntityManagerInterface $doctrine, FileService $fileService)
     {
         $this->doctrine = $doctrine;
         $this->fileService = $fileService;
     }
 
+    /**
+     * save a new Trick
+     * @param Trick $trick new trick
+     */
     public function save(Trick $trick) : void
     {
         $trick->setCreatedAt(new DateTime('@'.strtotime('now')));
@@ -23,12 +31,20 @@ class TrickManager extends AbstractManager
         $this->doctrine->flush();
     }
 
+    /**
+     * edit a specified Trick
+     * @param Trick $trick
+     */
     public function edit(Trick $trick) : void
     {
         $trick->setModifiedAt(new DateTime('@'.strtotime('now')));
         $this->doctrine->flush();
     }
 
+    /**
+     * remove a specified Trick
+     * @param Trick $trick
+     */
     public function delete(Trick $trick) : void
     {
         $this->fileService->remove('/images/trick/'.$trick->getId());

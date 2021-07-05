@@ -21,10 +21,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+/**
+ * Controller about all function/route about trick system
+ * @author Tristan
+ * @version 1
+ */
 class TrickController extends AbstractController
 {
 
     /**
+     * Create a new trick / Display trick form for new Trick
+     * @param Request $request request data
+     * @param TrickManager $manager Manager for trick
+     * @return Response Render / Json response
      * @Route("/tricks/new", name="tricks_new_form")
      * @IsGranted("ROLE_USER")
      */
@@ -65,6 +74,10 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Create a new trick group
+     * @param Request $request request data
+     * @param TrickGroupManager $manager Manager for trick group
+     * @return Response Render / Json response
      * @Route("/tricks/new/category", name="add_category")
      * @IsGranted("ROLE_USER")
      */
@@ -78,7 +91,7 @@ class TrickController extends AbstractController
                 [
                 'id' => $tricksGroup->getId(),
                 'nameGroup' => $tricksGroup->getNameGroup()
-            ]
+                ]
             );
         }
         return $this->json(
@@ -90,6 +103,12 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Add a comment on trick / Display trick detail template with comment form if user is connected
+     * @param Request $request request data
+     * @param Trick $item Manager for trick
+     * @param CommentManager $manager Manager for Comment
+     * @param CommentRepository $commentRepository Repository for comment
+     * @return Response Render / Json response
      * @Route("/tricks/{id}", name="tricks_detail")
      */
     public function trickDetail(Request $request, Trick $item, CommentManager $manager, CommentRepository $commentRepository) : Response
@@ -114,6 +133,13 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Edit a trick / Display trick form for edit Trick
+     * @param Request $request request data
+     * @param Trick $item concerned trick
+     * @param TrickManager $trickManager Manager for trick
+     * @param MediaManager $mediaManager Manager for Media
+     * @param MediaRepository $mediaRepository Repository for media
+     * @return Response Render / Json response
      * @Route("/tricks/{id}/edit", name="tricks_edit_form")
      * @IsGranted("ROLE_USER")
      */
@@ -169,6 +195,10 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Temove trick
+     * @param Trick $item concerned trick
+     * @param TrickManager $tricks Manager for trick
+     * @return Response Render / Json response
      * @Route("/tricks/{id}/remove", name="tricks_remove")
      * @IsGranted("ROLE_USER")
      */

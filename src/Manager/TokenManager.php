@@ -9,6 +9,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Manager of Token entity
+ * @author Tristan
+ * @version 1
+ */
 class TokenManager extends AbstractManager
 {
     public function __construct(EntityManagerInterface $doctrine, EventDispatcherInterface $eventDispatcher)
@@ -16,7 +21,14 @@ class TokenManager extends AbstractManager
         $this->doctrine = $doctrine;
         $this->eventDispatcher = $eventDispatcher;
     }
-    public function sendToken(String $search, String $type) : mixed
+
+    /**
+     * generate token and send it with mail
+     * @param String $search email/pseudo for find user
+     * @param String $type type of token
+     * @return bool result
+     */
+    public function sendToken(String $search, String $type) : bool
     {
         $token = new Token();
         $token->setToken();
@@ -55,6 +67,13 @@ class TokenManager extends AbstractManager
         return false;
     }
 
+    /**
+     * Use generated token
+     * @param string $token token from email
+     * @param string $type token type
+     * @param string|null $arg data arg
+     * @return bool result
+     */
     public function useToken(String $token, String $type, String $arg = null) : bool
     {
         $token = $this->doctrine->getRepository(Token::class)
@@ -91,7 +110,13 @@ class TokenManager extends AbstractManager
         return false;
     }
 
-    public function generateToken(User $user, String $type) : token
+    /**
+     * Generate token
+     * @param User $user concerned user
+     * @param String $type token type
+     * @return Token generated token
+     */
+    public function generateToken(User $user, String $type) : Token
     {
         $token = new Token;
         $token->setToken();
