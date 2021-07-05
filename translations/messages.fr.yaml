@@ -1,34 +1,65 @@
-Nom de la figure : Nom de la figure
-Description : Description
-Catégorie : Catégorie
-Veuiller choisir une catégorie : Veuiller choisir une catégorie
-Mettre à jour : Mettre à jour
-Nom du groupe : Nom du groupe
-Poster : Poster
-Envoyer : Envoyer
-Pseudonyme : Pseudonyme
-Email : Adresse mail
-Password : Mot de passe
-Confirm Password : Confirmer le mot de passe
-register : S'inscrire
-adresse mail du compte : Adresse mail du compte
-Reset password : Demander un nouveau mot de passe
-Change password : Changer le mot de passe
-Laisser un commentaire : Laisser un commentaire
-Front : Image de Une
-Submit : Valider
-selectionner un média pour la une : Séléctionner une image pour la une
-Update : Mettre à jour
-Register : S'inscrire
+general :
+  yes : Oui
+  no : Non
+  update : Mettre à jour
+  send : Envoyer
+  submit : poster
 auth :
-  forgotpassword : Mot de passe oublié?
-  changepassword : Changer le mot de passe
+  forgetpassword : 
+    title : Mot de passe oublié?
+    email : adresse mail du compte
+    submit : Demander un nouveau mot de passe
+  changepassword : 
+    title : Changer le mot de passe
+    confirm : confirmer le mot de passe
+    submit : changer le mot de passe
   login : Se connecter
-  register : S'inscrire
+  register :
+    title : S'inscrire
   pseudo : Identifiant
   password : Mot de passe
+  email : email
+  pseudonyme : Pseudonyme
 header :
   home : Acceuil
   tricks : Nouvelle figure
+  profile : Profil
   login : Se connecter
-  logup : S'inscrire
+  signup : S'inscrire
+  logout : Se déconnecter
+profile :
+  avatar :
+    title : Avatar
+    submit : modifier l'avatar
+  password :
+    title : Changer le mot de passe
+  email :
+    title : Changer l'adresse mail
+    message : Votre compte devra être vérifié de nouveau.<br>Un email vous sera envoyé.
+  removal :
+    title : Supprimer votre compte
+    message : <strong class="text-width-bold">! Supprimer votre compte est une opération irréversible !</strong><br>Vos commentaires à travers les différentes figures seront supprimer
+    confirm :
+      title : Etes-vous sûr de vouloir supprimer votre compte?
+      message : cette opération est irréversible et tous vos commentaires seront supprimées
+trick :
+  title :
+    add : ajouter une figure
+    modify : modifier une figure
+  name : Nom de la figure
+  description : Description
+  front :
+    title : Changer l'image principale
+    front : image de une
+    placeholder : selectionner un média pour la une
+    submit : mettre à la une
+  group :
+    title : Catégorie
+    name : Nom du groupe
+    placeholder : Veuiller choisir une catégorie
+  media :
+    add :
+      title : Ajouter un média
+    modify :
+      title : Modifier un média
+  comment :

@@ -39,13 +39,13 @@
 
 
         <div class="input-group mb-3">
-            <div class="input-group-text">
+            <div class="input-group-text d-none d-md-block">
             {{ form_label(password_form.password.first)}}
             </div>
             {{ form_widget(password_form.password.first) }}
         </div>
         <div class="input-group">
-            <div class="input-group-text">
+            <div class="input-group-text d-none d-md-block">
                 {{ form_label(password_form.password.second)}}
             </div>
                 {{ form_widget(password_form.password.second) }}
@@ -56,8 +56,7 @@
     <hr>
     <h2> Adresse mail</h2>
     <div class="alert alert-warning">
-        Votre compte devra être vérifié de nouveau.<br>
-        Un email vous sera envoyé.
+        {% trans %} profile.email.message {% endtrans %}
     </div>
     {{ form_start(email_form) }}
         <div class="input-group">
@@ -69,28 +68,27 @@
         </div>
     {{ form_end(email_form) }}
     <hr>
-    <h2>Supprimer le compte</h2>
+    <h2>{% trans %} profile.removal.title{% endtrans %}</h2>
     <div class="alert alert-danger">
-        <strong class="text-width-bold">! Supprimer votre compte est une opération irréversible !</strong><br>
-        Vos commentaires à travers les différentes figures seront supprimer
+        {% trans %} profile.removal.message {% endtrans %}
     </div>
-    <button class="btn btn-danger" data-bs-target="#DeleteModal" data-bs-toggle="modal">Supprimer le compte</button>
+    <button class="btn btn-danger" data-bs-target="#DeleteModal" data-bs-toggle="modal">{% trans %} profile.removal.title {% endtrans %}</button>
 </div>
     <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Etes-vous sûr de vouloir supprimer votre compte?</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">{% trans %} profile.removal.confirm.title {% endtrans %}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body">
                     <p>
-                    cette opération est irréversible et tous vos commentaires seront supprimées</p>
+                    {% trans %} profile.removal.confirm.message {% endtrans %}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Non</button>
-                    <a id="deleteConfirm" href="/profile/remove" type="button" class="btn btn-danger">Oui</a>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">{% trans %} general.no {% endtrans %}</button>
+                    <a id="deleteConfirm" href="/profile/remove" type="button" class="btn btn-danger">{% trans %} general.yes {% endtrans %}</a>
                 </div>
             </div>
         </div>

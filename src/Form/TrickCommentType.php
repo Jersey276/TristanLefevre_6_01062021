@@ -16,12 +16,13 @@ class TrickCommentType extends AbstractType
     {
         $builder
             ->add('text', TextareaType::class,[
-            'constraints' => [
-                new NotNull(null, 'Veuiller écrire pour poster un commentaire')
-            ]
+                'label' => 'comment.text',
+                'constraints' => [
+                    new NotNull(null, 'Veuiller écrire pour poster un commentaire')
+                ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Laisser un commentaire'
+                'label' => 'comment.submit'
             ])
         ;
     }

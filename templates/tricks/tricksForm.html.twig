@@ -27,7 +27,7 @@
 		</div>
 
 		{% if isEdit %}
-			<h1 class="p-3 h3 mb-0 text-dark font-weight-normal">Modifier la figure</h1>
+			<h1 class="p-3 h3 mb-0 text-dark font-weight-normal">{% trans %} trick.title.modify {% endtrans %}</h1>
 			<div class="px-3 navbar navbar-expand-md my-3">
 				<div id="media-collapse" class="collapse navbar-collapse row row-cols-1 justify-content-center justify-content-md-start row-cols-md-3 row-cols-lg-6 g-2 g-lg-3">
 					{% for media in tricks.getMedias() %}
@@ -39,7 +39,7 @@
 				</div>
 			</div>
 		{% else %}
-			<h1 class="h3 mb-3 font-weight-normal">Ajouter une nouvelle figure</h1>
+			<h1 class="h3 mb-3 font-weight-normal">{% trans %} trick.title.add {% endtrans %}</h1>
 		{% endif %}
 			{{ form_start(form) }}
 			{{ form_errors(form) }}
@@ -60,9 +60,9 @@
 							<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal">
 								Supprimer
 							</button>
-							{{ form_widget(form.Envoyer, {'label':'Mettre à jour'}) }}
+							{{ form_widget(form.Envoyer, {'label':'general.update'}) }}
 						{% else %}
-							{{ form_widget(form.Envoyer, {'label':'Poster'}) }}
+							{{ form_widget(form.Envoyer, {'label':'general.submit'}) }}
 						{% endif %}
 					</div>
 				</div>
@@ -86,7 +86,7 @@
 				</div>
 				<div class="modal-footer align-content-center">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-					{{ form_widget(formGroup.Envoyer) }}
+					{{ form_widget(formGroup.submit) }}
 					{{ form_end(formGroup) }}
 				</div>
 			</div>
@@ -117,7 +117,7 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Changer l'image principale</h5>
+						<h5 class="modal-title">{% trans %} trick.front.title {% endtrans %}</h5>
 					</div>
 					{{ form_start(frontImage) }}
 					<div class="modal-body">
@@ -148,7 +148,7 @@
 						</div>
 						<input id="media_form_id" name="media_id" type="hidden" value="">
 						<div id="media_form_footer" class="modal-footer">
-							<input type="submit" value="Ajouter">
+							<input type="submit" class="btn btn-success" value="Ajouter">
 						</div>
 					</form>
 				</div>

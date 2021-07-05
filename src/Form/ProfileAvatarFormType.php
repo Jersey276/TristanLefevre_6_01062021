@@ -16,6 +16,7 @@ class ProfileAvatarFormType extends AbstractType
     {
         $builder
             ->add('avatar', FileType::class, [
+                'label' => 'profile.avatar.file',
                 'label_attr' => [
                     'class' => 'mb-0'
                 ],
@@ -23,7 +24,9 @@ class ProfileAvatarFormType extends AbstractType
                     new Image()
                 ]
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class, [
+                'label' => 'profile.avatar.submit'          
+            ])
         ;
     }
 

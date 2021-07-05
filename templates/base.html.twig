@@ -24,34 +24,34 @@
 				<ul class="nav navbar-nav ms-auto mb-2 mb-lg-0">
 					<li class="nav-item">
 						<a class="nav-link" href="/">
-							home
+							{% trans %}header.home{% endtrans %}
 						</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/tricks/new">
-							tricks
+							{% trans %}header.tricks{% endtrans %}
 						</a>
 					</li>
 					{% if not is_granted('IS_AUTHENTICATED_FULLY') %}
 						<li class="nav-item">
 							<a class="nav-link" href="/login">
-								sign in
+								{% trans %}auth.login{% endtrans %}
 							</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="/register">
-								sign up
+								{% trans %}auth.register.title{% endtrans %}
 							</a>
 						</li>
 					{% else %}
 						<li class="nav-item">
 							<a class="nav-link" href="/profile">
-								profile
+								{% trans %}header.profile{% endtrans %}
 							</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="/logout">
-								log out
+								{% trans %}header.logout{% endtrans %}
 							</a>
 						</li>
 					{% endif %}
