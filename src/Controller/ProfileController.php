@@ -20,7 +20,7 @@ class ProfileController extends AbstractController
      * @Route("/profile", name="profile")
      * @IsGranted("ROLE_USER")
      */
-    public function index(Request $request, UserManager $manager, UserRepository $repository): Response
+    public function index(Request $request, UserManager $manager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         /** @var \App\Entity\User $user */
