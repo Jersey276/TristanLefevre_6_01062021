@@ -11,7 +11,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TokenManager extends AbstractManager
 {
-
     public function __construct(EntityManagerInterface $doctrine, EventDispatcherInterface $eventDispatcher)
     {
         $this->doctrine = $doctrine;
@@ -28,7 +27,7 @@ class TokenManager extends AbstractManager
             $user = $this->doctrine->getRepository(User::class)
                 ->findOneBy(['username' => $search]);
                 break;
-            case "password" :
+            case "password":
                 $user = $this->doctrine->getRepository(User::class)
                 ->findOneBy(['email' => $search]);
                 break;
@@ -36,20 +35,24 @@ class TokenManager extends AbstractManager
             throw new Exception("le type de token demandé n'existe pas");
         }
 
-        $token->setIdUser($user->getId());
-        $this->doctrine->persist($token);
-        $this->doctrine->flush();
-        $event = new EmailEvent($user->getEmail(),$token->getToken());
-        switch ($type) {
+        if (isset($user)) {
+            $token->setIdUser($user->getId());
+            $this->doctrine->persist($token);
+            $this->doctrine->flush();
+            $event = new EmailEvent($user->getEmail(), $token->getToken());
+            switch ($type) {
             case "email":
                 $this->eventDispatcher->dispatch($event, $event::NAME_NEW_ACCOUNT);
+                // no break
             case "password":
                 $this->eventDispatcher->dispatch($event, $event::NAME_NEW_PWD);
                 break;
-            default :
+            default:
                 return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public function useToken(String $token, String $type, String $arg = null) : bool
@@ -61,6 +64,9 @@ class TokenManager extends AbstractManager
             case "email":
                 $user = $this->doctrine->getRepository(User::class)
                     ->find($token->getIdUser());
+                if (!isset($user)) {
+                    return false;
+                }
                 $user->setIsEmailCheck(true);
                 $this->doctrine->flush();
                 break;
@@ -69,6 +75,9 @@ class TokenManager extends AbstractManager
             case "changePassword":
                 $user = $this->doctrine->getRepository(User::class)
                     ->find($token->getIdUser());
+                if (!isset($user) || !isset($arg)) {
+                    return false;
+                }
                 $user->setPassword($arg);
                 $this->doctrine->flush();
                 break;

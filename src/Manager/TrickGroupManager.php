@@ -20,6 +20,6 @@ class TrickGroupManager Extends AbstractManager
         $this->doctrine->persist($tricksGroup);
         $this->doctrine->flush();
 
-        return $this->doctrine->getRepository(TrickGroup::class)->findOneBy(['nameGroup'=>$name]);
+        return $tricksGroup;
     }
 }

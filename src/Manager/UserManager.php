@@ -76,7 +76,7 @@ class UserManager extends AbstractManager
     {
         try {
             $oldUser = $this->doctrine->getRepository(User::class)->find($user->getId());
-            if ($oldUser->getEmail() == $user->getEmail()) {
+            if (isset($oldUser) &&$oldUser->getEmail() == $user->getEmail()) {
                 $user->setIsEmailCheck(false);
             }
             $this->doctrine->flush();

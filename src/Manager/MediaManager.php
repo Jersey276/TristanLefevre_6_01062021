@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaManager extends AbstractManager
 {
-    
     public function __construct(FileService $fileService, EntityManagerInterface $doctrine)
     {
         $this->fileService = $fileService;
@@ -23,7 +22,7 @@ class MediaManager extends AbstractManager
     public function setFront(Trick $trick, media $media) : bool
     {
         $media = $this->doctrine->find(Media::class, $media);
-        if ($media->getType()->getName() == "image") {
+        if (isset($media) && $media->getType()->getName() == "image") {
             $trick->setFront($media);
             $this->doctrine->flush();
             return true;
@@ -44,8 +43,8 @@ class MediaManager extends AbstractManager
 
     public function addImage(Trick $trick, UploadedFile $file, MediaType $type) : bool
     {
-        if((explode('/',$file->getMimeType()))[0] == $type->getName())
-        {
+        $fileType = $file->getMimeType();
+        if ($fileType != null && (explode('/', $fileType))[0] == $type->getName()) {
             //upload file into trick folder
             $filepath = $this->fileService->upload($file, '/images/trick/'.$trick->getId() .'/');
 
@@ -94,17 +93,21 @@ class MediaManager extends AbstractManager
     public function addVideo(Trick $trick, string $url) : bool
     {
         $media = new Media();
-        $media->setType($this->doctrine->getRepository(MediaType::class)->findOneBy(['name' => 'video']));
-        $path = $this->generateVideoUrl($url);
-        if ($path == null) {
-            return false;
-        }
-        $media->setPath($path);
-        $media->setTrick($trick);
+        $mediaType = $this->doctrine->getRepository(MediaType::class)->findOneBy(['name' => 'video']);
+        if ($mediaType != null) {
+            $media->setType($mediaType);
+            $path = $this->generateVideoUrl($url);
+            if ($path == null) {
+                return false;
+            }
+            $media->setPath($path);
+            $media->setTrick($trick);
 
-        $this->doctrine->persist($media);
-        $this->doctrine->flush();
-        return true;
+            $this->doctrine->persist($media);
+            $this->doctrine->flush();
+            return true;
+        }
+        return false;
     }
 
     public function changeVideo(Media $media, string $url) : bool
@@ -124,13 +127,13 @@ class MediaManager extends AbstractManager
 
     private function generateVideoUrl(string $url) : ?string
     {
-        list(,,$platform,$id) = explode('/', $url);
+        list(, , $platform, $id) = explode('/', $url);
         switch ($platform) {
-            case 'youtu.be' :
+            case 'youtu.be':
                 return 'youtube/'. $id ;
-            case 'dai.ly' :
+            case 'dai.ly':
                 return 'dailymotion/'.$id;
-            default :
+            default:
                 return null;
         }
     }

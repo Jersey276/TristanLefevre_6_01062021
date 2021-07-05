@@ -59,7 +59,7 @@ class Trick
     /**
      * @ORM\OneToOne(targetEntity=Media::class, cascade={"persist", "remove"})
      */
-    private Media $front;
+    private ?Media $front;
 
     public function __construct()
     {
@@ -101,7 +101,7 @@ class Trick
         return $this->trickGroup;
     }
 
-    public function setTrickGroup(?TrickGroup $trickGroup): self
+    public function setTrickGroup(TrickGroup $trickGroup): self
     {
         $this->trickGroup = $trickGroup;
 
@@ -142,18 +142,6 @@ class Trick
         return $this;
     }
 
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getTricks() === $this) {
-                $comment->setTricks(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -171,7 +159,7 @@ class Trick
         return $this->modifiedAt;
     }
 
-    public function setModifiedAt(?\DateTimeInterface $modifiedAt): self
+    public function setModifiedAt(\DateTimeInterface $modifiedAt): self
     {
         $this->modifiedAt = $modifiedAt;
 
@@ -199,18 +187,6 @@ class Trick
         if (!$this->medias->contains($media)) {
             $this->medias[] = $media;
             $media->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMedia(Media $media): self
-    {
-        if ($this->medias->removeElement($media)) {
-            // set the owning side to null (unless already changed)
-            if ($media->getTrick() === $this) {
-                $media->setTrick(null);
-            }
         }
 
         return $this;
@@ -248,8 +224,11 @@ class Trick
 
     public function setFront(?Media $front): self
     {
-        $this->front = $front;
-
+        if (isset($front)) {
+            $this->front = $front;
+            return $this;
+        }
+        $this->front = null;
         return $this;
     }
 }

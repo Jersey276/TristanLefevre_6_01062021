@@ -35,21 +35,25 @@ class MediaController extends AbstractController
     {
         $type = ($mediaTypeRepo->find($request->request->getInt('type')));
 
-        if ($type->getName() == "image") {
-            if ($manager->addImage($item, $request->files->get('path'), $type)) {
-                $this->addFlash('notice', 'Media rajouté');
-            } else {
-                $this->addFlash('danger', 'Problème sur la collecte de l\'image');
+        if (isset($type)) {
+            if ($type->getName() == "image") {
+                if ($manager->addImage($item, $request->files->get('path'), $type)) {
+                    $this->addFlash('notice', 'Media rajouté');
+                } else {
+                    $this->addFlash('danger', 'Problème sur la collecte de l\'image');
+                }
             }
-        }
-        if ($type->getName() == "video") {
-            if ($manager->addVideo($item, $request->request->filter('path', null, FILTER_SANITIZE_URL))) {
-                $this->addFlash('notice', 'Media rajouté');
-            } else {
-                $this->addFlash('danger', 'Problème sur l\insetion de la vidéo');
+            if ($type->getName() == "video") {
+                if ($manager->addVideo($item, $request->request->filter('path', null, FILTER_SANITIZE_URL))) {
+                    $this->addFlash('notice', 'Media rajouté');
+                } else {
+                    $this->addFlash('danger', 'Problème sur l\insetion de la vidéo');
+                }
             }
+            return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
         }
-        return $this->redirectToRoute("tricks_edit_form",['id' => $item->getId()]);
+        $this->addFlash('danger', 'Type de media inconnu');
+        return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
     }
 
     /**
@@ -59,22 +63,26 @@ class MediaController extends AbstractController
      */
     public function ModifyMedia(Request $request, Trick $item, Media $media, MediaManager $manager, MediaTypeRepository $mediaTypeRepo) : Response
     {
-        $type = ($mediaTypeRepo->find($request->request->get('type')))->getName();
-        if ($type == "image") {
-            if ($manager->ChangeImage($item, $media, $request->files->get('path'))) {
-                $this->addFlash('notice', 'Media mis à jour');
-            } else {
-                $this->addFlash('danger', 'Problème avec la mise à jour du média');
+        $type = ($mediaTypeRepo->find($request->request->get('type')));
+        if (isset($type)) {
+            if ($type == "image") {
+                if ($manager->ChangeImage($item, $media, $request->files->get('path'))) {
+                    $this->addFlash('notice', 'Media mis à jour');
+                } else {
+                    $this->addFlash('danger', 'Problème avec la mise à jour du média');
+                }
             }
-        }
-        if ($type == "video") {
-            if ($manager->changeVideo($media, $request->request->filter('path', null, FILTER_SANITIZE_URL))) {
-                $this->addFlash('notice', 'Media mis à jour');
-            } else {
-                $this->addFlash('danger', 'Problème avec la mise à jour du média');
+            if ($type == "video") {
+                if ($manager->changeVideo($media, $request->request->filter('path', null, FILTER_SANITIZE_URL))) {
+                    $this->addFlash('notice', 'Media mis à jour');
+                } else {
+                    $this->addFlash('danger', 'Problème avec la mise à jour du média');
+                }
             }
+            return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
         }
-        return $this->redirectToRoute("tricks_edit_form",['id' => $item->getId()]);
+        $this->addFlash('danger', 'Type de media inconnu');
+        return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
     }
 
     /**

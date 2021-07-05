@@ -14,6 +14,7 @@ use App\Manager\MediaManager;
 use App\Manager\TrickGroupManager;
 use App\Manager\TrickManager;
 use App\Repository\CommentRepository;
+use App\Repository\MediaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +36,9 @@ class TrickController extends AbstractController
             $form->handleRequest($request);
 
             $formGroup = $this->createForm(
-                TrickGroupType::class, new TrickGroup(),[
+                TrickGroupType::class,
+                new TrickGroup(),
+                [
                     'attr' => [
                         'id' => 'TrickGroupAdd'
                     ]
@@ -44,14 +47,13 @@ class TrickController extends AbstractController
 
             $formFront = $this->createForm(TrickFrontType::class);
 
-            if ($form->isSubmitted() && $form->isValid())
-            {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $manager->save($tricks);
                 $this->addFlash(
                     'notice',
                     'La figure à été mise à jour'
                 );
-                return $this->redirectToRoute("tricks_detail",['id' => $tricks->getId()]);
+                return $this->redirectToRoute("tricks_detail", ['id' => $tricks->getId()]);
             }
             return $this->render('tricks/tricksForm.html.twig', [
                 'form' => $form->createView(),
@@ -82,7 +84,8 @@ class TrickController extends AbstractController
         return $this->json(
             [
             'message' => 'Une erreur a eu lieu avec votre formulaire',
-            ], 500
+            ],
+            500
         );
     }
 
@@ -92,13 +95,11 @@ class TrickController extends AbstractController
     public function trickDetail(Request $request, Trick $item, CommentManager $manager, CommentRepository $commentRepository) : Response
     {
         $arg = [ 'tricks' => $item ];
-        if ( $this->isGranted('IS_AUTHENTICATED_FULLY'))
-        {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             $comment = new Comment();
             $form = $this->createForm(TrickCommentType::class, $comment);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid())
-            {
+            if ($form->isSubmitted() && $form->isValid()) {
                 /** @var \App\Entity\User $user */
                 $user = $this->getUser();
                 $newTrick = $manager->save($comment, $item, $user);
@@ -106,7 +107,7 @@ class TrickController extends AbstractController
             }
             $arg['form']= $form->createView();
         }
-        $arg['comments'] = $commentRepository->findBy(['Tricks' => $item->getId()],['id' => 'DESC'],4);
+        $arg['comments'] = $commentRepository->findBy(['Tricks' => $item->getId()], ['id' => 'DESC'], 4);
         $arg['nbToken'] = $commentRepository->count(['Tricks' => $item->getId()]) - 4;
         $arg['offset'] = 1;
         return $this->render('tricks/detail.html.twig', $arg);
@@ -116,10 +117,17 @@ class TrickController extends AbstractController
      * @Route("/tricks/{id}/edit", name="tricks_edit_form")
      * @IsGranted("ROLE_USER")
      */
-    public function trickEditForm(Request $request, Trick $item, TrickManager $trickManager, MediaManager $mediaManager) : Response
-    {
+    public function trickEditForm(
+        Request $request,
+        Trick $item,
+        TrickManager $trickManager,
+        MediaManager $mediaManager,
+        MediaRepository $mediaRepository
+    ) : Response {
         $formGroup = $this->createForm(
-            TrickGroupType::class, new TrickGroup(),[
+            TrickGroupType::class,
+            new TrickGroup(),
+            [
                 'attr' => [
                     'id' => 'TrickGroupAdd'
                 ]
@@ -129,31 +137,35 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $item);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $trickManager->edit($form->getData());
             $this->addFlash(
                 'notice',
                 'La figure à été mise à jour'
             );
-            return $this->redirectToRoute('tricks_detail',['id' => $item->getId()]);
+            return $this->redirectToRoute('tricks_detail', ['id' => $item->getId()]);
         }
 
         $formFront = $this->createForm(TrickFrontType::class, $item);
         $formFront->handleRequest($request);
 
         if ($formFront->isSubmitted() && $formFront->isValid()) {
-            $mediaManager->setFront($formFront->getData(), $item->getFront());
+            $front = $mediaRepository->find($request->request->getInt('front'));
+            if ($front != null) {
+                $mediaManager->setFront($formFront->getData(), $front);
+            }
         }
 
-        return $this->render('tricks/tricksForm.html.twig',
-        [
+        return $this->render(
+            'tricks/tricksForm.html.twig',
+            [
             'form' => $form->createView(),
             'formGroup' => $formGroup->createView(),
             'frontImage' => $formFront->createView(),
             'isEdit' => true,
             'tricks' => $item
-        ]);
+        ]
+        );
     }
 
     /**
