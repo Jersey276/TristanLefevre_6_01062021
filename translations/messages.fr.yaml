@@ -4,6 +4,7 @@ general :
   update : Mettre à jour
   send : Envoyer
   submit : poster
+  showMore : Afficher plus
 auth :
   forgetpassword : 
     title : Mot de passe oublié?
@@ -58,8 +59,7 @@ trick :
     name : Nom du groupe
     placeholder : Veuiller choisir une catégorie
   media :
-    add :
-      title : Ajouter un média
-    modify :
-      title : Modifier un média
+    title :
+      add : Ajouter un média
+      modify : Modifier un média
   comment :

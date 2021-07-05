@@ -1,11 +1,11 @@
 <div class="col text-center">
 {% if media.getType.getName() == 'image' %}
-    <button class="btn p-0" data-type="{{ media.getType.getName() }}" data-url="{{ media.getPath() }}">
+    <button class="btn p-0 media-display-btn" data-type="{{ media.getType.getName() }}" data-url="{{ media.getPath() }}">
         <div class="media-display">
             <img class="card-img-top btn-block" src="{{media.getPath()}}">
         </div>
 {% elseif media.getType.getName() == 'video' %}
-    <button class="btn p-0" data-type="{{ media.getType.getName() }}" data-url="{{ media.getDisplayUrl() }}">
+    <button class="btn p-0 media-display-btn" data-type="{{ media.getType.getName() }}" data-url="{{ media.getDisplayUrl() }}">
         <div class="my-auto media-display position-relative">
             <div class="position-absolute media-video-front">
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-play-btn-fill" viewBox="0 0 16 16">

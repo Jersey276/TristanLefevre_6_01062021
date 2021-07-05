@@ -67,7 +67,7 @@
 				<div class="w-100 text-center my-3">
 					<button class="btn btn-primary text-center" id="btnShowMore">
 				  		<span class="spinner-border spinner-border-sm" style="display: none;" id="spinnerShowMore" role="status" aria-hidden="true"></span>
-						show more
+						{% trans %} general.showMore {% endtrans %}
 					</button>
 				</div>
 			{% endif %}
@@ -104,7 +104,7 @@
 		</div>
 
 <script>
-	$('.media-display').click( function(e) {
+	$('.media-display-btn').click( function(e) {
 		var data = e.currentTarget.dataset;
 		var myModal = new bootstrap.Modal(document.getElementById('MediaModal'), {keyboard: false});
 		$('#MediaContent').empty();
@@ -119,8 +119,7 @@
 				);
 				break;
 			default :
-				process.exit(1);
-				break;
+				return;
 		}
 		myModal.toggle();
 

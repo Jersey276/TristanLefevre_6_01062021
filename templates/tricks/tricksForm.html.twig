@@ -135,7 +135,7 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Ajouter un média</h5>
+						<h5 id="media-modal-title" class="modal-title"></h5>
 					</div>
 					<div id="myFrontAlert"></div>
 					<form id="Media_form">
@@ -239,6 +239,7 @@
 		var data = e.currentTarget.attributes;
 		var myModal = new bootstrap.Modal(document.getElementById('MediaModal'), {keyboard: false});
 		$('#media_path').remove();
+		$('#media-modal-title').text('{% trans %} trick.media.title.modify {% endtrans %}');
 		$('#media_set_front').remove();
 		switch (data['data-media-type'].value) {
 		case "1":
@@ -275,6 +276,7 @@
 		$("#media-add").click(function (e) {
 		var myModal = new bootstrap.Modal(document.getElementById('MediaModal'), {keyboard: false});
 		$("#MediaForm_type").prop('disabled', false);
+		$('#media-modal-title').text('{% trans %} trick.media.title.add {% endtrans %}');
 		$('#MediaForm_type').prop('selectedIndex', 0);
 		$("#media_form_id").val('');
 		$('#media_path').remove();
