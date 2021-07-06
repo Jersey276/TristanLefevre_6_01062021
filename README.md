@@ -13,6 +13,7 @@ his website on is 1.0 version is composed of a trick post system with comment an
 2.  Collect all composer dependencies with `composer require` or `composer update` and press enter
 3.  Config your website with .env files with all needed data for work (see .env)
 4.  use 'php bin/console doctrine/migrations/migrate' for fill database with all table
+5.  Modify APP_ENV to 'prod' when you sure that the website work.
 
 ## Content
 
