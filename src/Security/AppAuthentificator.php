@@ -31,13 +31,13 @@ class AppAuthentificator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): PassportInterface
     {
-        $username = $request->request->get('username', '');
+        $username = $request->request->getAlnum('username', '');
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);
 
         return new Passport(
             new UserBadge($username),
-            new PasswordCredentials($request->request->get('password', '')),
+            new PasswordCredentials($request->request->filter('password', '', FILTER_SANITIZE_FULL_SPECIAL_CHARS)),
             [
                 new CsrfTokenBadge('authenticate', $request->get('_csrf_token')),
             ]

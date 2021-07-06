@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/auth.css">
+{% endblock %}
+{% block body %}
+    <div class="centered text-center">
+        <h1>{% trans %} errors.403.title {% endtrans %}</h1>
+        <p>{% trans %} errors.403.message {% endtrans %}</p>
+    </div>
+
+{% endblock %}

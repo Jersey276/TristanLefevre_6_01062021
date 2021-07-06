@@ -44,24 +44,24 @@ class Comment
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->User;
     }
 
-    public function setUser(?User $User): self
+    public function setUser(User $User): self
     {
         $this->User = $User;
 
         return $this;
     }
 
-    public function getTricks(): ?Trick
+    public function getTricks(): Trick
     {
         return $this->Tricks;
     }
 
-    public function setTricks(?Trick $Tricks): self
+    public function setTricks(Trick $Tricks): self
     {
         $this->Tricks = $Tricks;
 

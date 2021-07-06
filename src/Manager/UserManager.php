@@ -12,6 +12,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * Manager of User entity
+ * @author Tristan
+ * @version 1
+ */
 class UserManager extends AbstractManager
 {
     private UserPasswordHasherInterface $passwordEncoder;
@@ -31,6 +36,10 @@ class UserManager extends AbstractManager
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * register an user
+     * @param User $user generated User
+     */
     public function register(User $user) : void
     {
         // encode password
@@ -46,12 +55,20 @@ class UserManager extends AbstractManager
         $this->tm->sendToken($user->getUsername(), "email");
     }
 
+    /**
+     * send token for ask to change password
+     * @param User $user concerned user
+     */
     public function forgotPassword(User $user) : void
     {
         // Send mail with new token for change password
         $this->tm->sendToken($user->getEmail(), "password");
     }
 
+    /**
+     * use token for change password
+     * @param User $user concerned user
+     */
     public function changePassword(User $user, String $token) : void
     {
         // encode password
@@ -60,6 +77,11 @@ class UserManager extends AbstractManager
         $this->tm->useToken($token, 'changePassword', $user->getPassword());
     }
 
+    /**
+     * change password profile of concerned user
+     * @param User $user concerned user
+     * @return bool result
+     */
     public function changePasswordProfile(User $user) : bool
     {
         try {
@@ -71,13 +93,19 @@ class UserManager extends AbstractManager
         return true;
     }
 
+    /**
+     * change email profile of concerned user
+     * @param User $user concerned user
+     * @return bool result
+     */
     public function changeEmailProfile(User $user) : bool
     {
         try {
             $oldUser = $this->doctrine->getRepository(User::class)->find($user->getId());
-            if ($oldUser->getEmail() == $user->getEmail()) {
-                $user->setIsEmailCheck(false);
+            if (!isset($oldUser) || $oldUser->getEmail() == $user->getEmail()) {
+                return false;
             }
+            $user->setIsEmailCheck(false);
             $this->doctrine->flush();
             $token = $this->tm->generateToken($user, 'email');
             $event = new EmailEvent($user->getEmail(), $token->getToken());
@@ -88,6 +116,12 @@ class UserManager extends AbstractManager
         return true;
     }
 
+    /**
+     * change avatar profile of concerned user
+     * @param User $user concerned user
+     * @param UploadedFile $file uploaded file
+     * @return bool result
+     */
     public function changeAvatarProfile(User $user, UploadedFile $file) : bool
     {
         $user->setAvatar(
@@ -105,11 +139,21 @@ class UserManager extends AbstractManager
         return true;
     }
 
+    /**
+     * forgot password
+     * @param String $token
+     * @return bool result
+     */
     public function validEmail(String $token) : bool
     {
         return $this->tm->useToken($token, "email");
     }
 
+    /**
+     * remove an user
+     * @param User $user concerned user
+     * @return bool result
+     */
     public function removeUser(User $user) : bool
     {
         try {

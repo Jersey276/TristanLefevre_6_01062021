@@ -35,6 +35,10 @@ class MailServiceSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * send email validation email
+     * @param EmailEvent $event event for email data
+     */
     public function sendValidationMail(EmailEvent $event) : void
     {
         $mail = new TemplatedEmail();
@@ -49,6 +53,10 @@ class MailServiceSubscriber implements EventSubscriberInterface
         $this->mailer->send($mail);
     }
     
+    /**
+     * send email update validation email
+     * @param EmailEvent $event event for email data
+     */
     public function sendEmailUpdateMail(EmailEvent $event) : void
     {
         $mail = new TemplatedEmail();
@@ -63,6 +71,10 @@ class MailServiceSubscriber implements EventSubscriberInterface
         $this->mailer->send($mail);
     }
 
+    /**
+     * send email validation recall email
+     * @param EmailEvent $event event for email data
+     */
     public function sendRecallValidationMail(EmailEvent $event) : void
     {
         $mail = new TemplatedEmail();
@@ -77,6 +89,10 @@ class MailServiceSubscriber implements EventSubscriberInterface
         $this->mailer->send($mail);
     }
 
+    /**
+     * send change password email
+     * @param EmailEvent $event event for email data
+     */
     public function sendChangePasswordMail(EmailEvent $event) : void
     {
         $mail = new TemplatedEmail();
