@@ -22,3 +22,5 @@ This project contains basic functionnality of a blog website such has
 -   Comment for trick
 -   User Management system
 -   File (Media) uploader system
+-   
+![arborescence](https://user-images.githubusercontent.com/83149814/124611116-6c9f9300-de71-11eb-9943-7dfe776c9d29.png)
