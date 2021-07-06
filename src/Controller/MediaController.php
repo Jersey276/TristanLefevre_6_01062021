@@ -45,7 +45,12 @@ class MediaController extends AbstractController
      * @Route("/tricks/{id}/media/add", name="add_media")
      * @IsGranted("ROLE_USER")
      */
-    public function addMedia(Request $request, Trick $item, MediaTypeRepository $mediaTypeRepo, MediaManager $manager) : Response
+    public function addMedia(
+        Request $request,
+        Trick $item,
+        MediaTypeRepository $mediaTypeRepo,
+        MediaManager $manager
+    ) : Response
     {
         $type = ($mediaTypeRepo->find($request->request->getInt('type')));
 
@@ -82,7 +87,7 @@ class MediaController extends AbstractController
      * @ParamConverter("media", options={"id" = "media_id"})
      * @IsGranted("ROLE_USER")
      */
-    public function ModifyMedia(
+    public function modifyMedia(
         Request $request,
         Trick $item,
         Media $media,

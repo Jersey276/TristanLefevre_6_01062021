@@ -37,7 +37,7 @@ class UserManager extends AbstractManager
     }
 
     /**
-     * register a user
+     * register an user
      * @param User $user generated User
      */
     public function register(User $user) : void
@@ -150,7 +150,7 @@ class UserManager extends AbstractManager
     }
 
     /**
-     * remove a user
+     * remove an user
      * @param User $user concerned user
      * @return bool result
      */

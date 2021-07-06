@@ -31,7 +31,7 @@ class UserChecker implements UserCheckerInterface
         TokenRepository $tokenRepository,
         TokenManager $tokenManager
     ) {
-        $this->$eventDispatcher = $eventDispatcher;
+        $this->eventDispatcher = $eventDispatcher;
         $this->tokenRepository = $tokenRepository;
         $this->tokenManager = $tokenManager;
     }

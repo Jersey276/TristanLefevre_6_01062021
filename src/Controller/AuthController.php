@@ -48,7 +48,7 @@ class AuthController extends AbstractController
      * @return Response Render / Json response
      * @Route("/register", name="register")
      */
-    public function index(Request $request, UserManager $userManager) : Response
+    public function register(Request $request, UserManager $userManager) : Response
     {
         $user = new User();
 
