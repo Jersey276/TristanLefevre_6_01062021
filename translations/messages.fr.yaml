@@ -64,3 +64,11 @@ trick :
       add : Ajouter un média
       modify : Modifier un média
   comment :
+    submit : Laisser un commentaire
+errors :
+  404 :
+    title : Rien ...
+    message : il semblerais que la page demandé n'existe pas sur notre site.
+  403 :
+    title : Accès refusé
+    message : Cette partie là du site est interdite pour vous.

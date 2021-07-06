@@ -32,12 +32,12 @@ class Token
      */
     private string $type;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getToken(): ?string
+    public function getToken(): string
     {
         return $this->token;
     }
@@ -53,7 +53,7 @@ class Token
         return $this;
     }
 
-    public function getIdUser(): ?int
+    public function getIdUser(): int
     {
         return $this->idUser;
     }
@@ -65,7 +65,7 @@ class Token
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }

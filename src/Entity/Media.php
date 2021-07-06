@@ -33,12 +33,12 @@ class Media
      */
     private Trick $trick;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getPath(): ?string
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -50,24 +50,24 @@ class Media
         return $this;
     }
 
-    public function getType(): ?MediaType
+    public function getType(): MediaType
     {
         return $this->type;
     }
 
-    public function setType(?MediaType $type): self
+    public function setType(MediaType $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function getTrick(): ?Trick
+    public function getTrick(): Trick
     {
         return $this->trick;
     }
 
-    public function setTrick(?Trick $trick): self
+    public function setTrick(Trick $trick): self
     {
         $this->trick = $trick;
 

@@ -13,17 +13,25 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * Controller about all function/route about authentification system
+ * @author Tristan
+ * @version 1
+ */
 class AuthController extends AbstractController
 {
 
     /**
+     * Login a user (prebuild function)
+     * @param AuthenticationUtils $authenticationUtils authentification utility class
+     * @return Response Render / Json response
      * @Route("/login", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-         if ($this->getUser()) {
-             return $this->redirectToRoute('home');
-         }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -34,9 +42,13 @@ class AuthController extends AbstractController
     }
 
     /**
+     * Display registration template / register a user
+     * @param Request $request request data
+     * @param UserManager $userManager manager for user function
+     * @return Response Render / Json response
      * @Route("/register", name="register")
      */
-    public function index(Request $request, UserManager $userManager) : Response
+    public function register(Request $request, UserManager $userManager) : Response
     {
         $user = new User();
 
@@ -54,6 +66,10 @@ class AuthController extends AbstractController
     }
 
     /**
+     * Display forgot password template / ask to send mail for reset password
+     * @param Request $request request data
+     * @param UserManager $userManager manager for user function
+     * @return Response Render / Json response
      * @Route("/forgot_password", methods={"GET", "POST"}, name="forgot_password")
      */
     public function forgotPassword(Request $request, UserManager $userManager) : Response
@@ -70,14 +86,20 @@ class AuthController extends AbstractController
     }
 
     /**
+     * Display change password template / change password
+     * @param Request $request request data
+     * @param String $token token
+     * @param UserManager $userManager manager for user function
+     * @return Response Render / Json response
      * @Route("/reset_password/{token}", name="change_password")
      */
     public function changePassword(Request $request, string $token, UserManager $userManager) : Response
     {
         $user = new User();
-        $form = $this->createForm(ChangePasswordType::class, 
-                $user,
-                [
+        $form = $this->createForm(
+            ChangePasswordType::class,
+            $user,
+            [
                     'action' => '/reset_password/'.$token,
                     'method' => 'POST'
                 ]
@@ -93,6 +115,10 @@ class AuthController extends AbstractController
     }
 
     /**
+     * Display registration template / register a user
+     * @param String $token token
+     * @param UserManager $manager manager for user function
+     * @return Response Render / Json response
      * @Route("/verify_email/{token}", name="check_email")
      */
     public function validEmail(string $token, UserManager $manager) : Response
@@ -103,6 +129,8 @@ class AuthController extends AbstractController
     }
 
     /**
+     * Logout User (prebuild function)
+     * @return Response Render / Json response
      * @Route("/logout", name="app_logout")
      */
     public function logout() : Response

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -8,6 +8,11 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+/**
+ * Service class for file manager
+ * @author Tristan
+ * @version 1
+ */
 class FileService
 {
     private string $targetDirectory;
@@ -23,6 +28,13 @@ class FileService
         $this->fileSystem = $fileSystem;
     }
 
+    /**
+     * upload file from
+     * @param UploadedFile $file uploaded file
+     * @param String $folder folder destination path
+     * @param String $newFileName fole new name
+     * @return string file path
+     */
     public function upload(UploadedFile $file, String $folder, String $newFileName = null) : string
     {
         if (empty($newFileName)) {
@@ -43,6 +55,11 @@ class FileService
         return $folder . $fileName;
     }
 
+    /**
+     * remove a file
+     * @param String $filePath file path
+     * @return bool result
+     */
     public function remove(String $filePath) : bool
     {
         error_log($filePath);
