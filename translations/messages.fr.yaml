@@ -23,7 +23,7 @@ auth :
   email : email
   pseudonyme : Pseudonyme
 header :
-  home : Acceuil
+  home : Accueil
   tricks : Nouvelle figure
   profile : Profil
   login : Se connecter

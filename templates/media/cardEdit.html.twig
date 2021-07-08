@@ -10,7 +10,7 @@
     </div>
 {% endif %}
 
-        <div class="mt-2 ms-auto border d-flex flex-row" id="media-{{ media.getId() }}">
+        <div class="mt-2 ms-auto border d-flex flex-row align-self-start align-self-md-stretch" id="media-{{ media.getId() }}">
             {% if media.getType.getName() == 'image' %}
                 <button type="button" class="btn media-modify" data-media-id='{{ media.getId() }}' data-media-path='{{ media.getPath() }}' data-media-type="{{ media.getType.getId() }}">
             {% elseif media.getType.getName() == 'video' %}

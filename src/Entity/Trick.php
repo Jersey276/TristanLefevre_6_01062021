@@ -111,17 +111,17 @@ class Trick
     
     public function getDisplayUrl() : String
     {
-        return "/tricks/". $this->getId();
+        return "/tricks/". $this->getTitle();
     }
 
     public function getEditUrl() : String
     {
-        return "/tricks/". $this->getId() . "/edit";
+        return "/tricks/". $this->getTitle() . "/edit";
     }
 
     public function getRemoveUrl() : String
     {
-        return "/tricks/". $this->getId() . "/remove";
+        return "/tricks/". $this->getTitle() . "/remove";
     }
 
     /**
