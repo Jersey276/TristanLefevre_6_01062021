@@ -46,8 +46,8 @@ profile :
       message : cette opération est irréversible et tous vos commentaires seront supprimées
 trick :
   title :
-    add : ajouter une figure
-    modify : modifier une figure
+    add : Ajouter une figure
+    modify : Modifier une figure
   name : Nom de la figure
   description : Description
   front :
