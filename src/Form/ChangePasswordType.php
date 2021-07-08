@@ -27,14 +27,14 @@ class ChangePasswordType extends AbstractType
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'auth.confirmpassword.confirm',
+                    'label' => 'auth.changepassword.confirm',
                     'attr' => [
                         'class' => 'form-control'
                     ]
                 ]
             ])
             ->add('changePassword', SubmitType ::class, [
-                'label' => 'auth.confirmpassword.submit',
+                'label' => 'auth.changepassword.submit',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]
