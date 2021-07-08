@@ -15,6 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class HomeController extends AbstractController
 {
+    /**
+     * @var int limit of displayed tricks
+     */
     const LIMIT = 15;
 
     /**
