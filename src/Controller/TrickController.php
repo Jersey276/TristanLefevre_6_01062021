@@ -56,8 +56,6 @@ class TrickController extends AbstractController
                 ]
             );
 
-            $formFront = $this->createForm(TrickFrontType::class);
-
             if ($form->isSubmitted() && $form->isValid()) {
                 $manager->save($tricks);
                 $this->addFlash(
@@ -69,7 +67,6 @@ class TrickController extends AbstractController
             return $this->render('tricks/tricksForm.html.twig', [
                 'form' => $form->createView(),
                 'formGroup' => $formGroup->createView(),
-                'frontImage' => $formFront->createView(),
                 'isEdit' => false,
             ]);
         }
@@ -174,7 +171,7 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('tricks_detail', ['title' => $item->getTitle()]);
         }
 
-        $formFront = $this->createForm(TrickFrontType::class, $item);
+        $formFront = $this->createForm(TrickFrontType::class, $item,['id' => $item->getId()]);
         $formFront->handleRequest($request);
 
         if ($formFront->isSubmitted() && $formFront->isValid()) {
