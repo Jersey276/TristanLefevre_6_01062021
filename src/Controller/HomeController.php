@@ -42,7 +42,7 @@ class HomeController extends AbstractController
      */
     public function askMore(Request $request, TrickRepository $trickRepository, int $base) : Response
     {
-        $tricks = $trickRepository->findBy([], [], 5, $base*5);
+        $tricks = $trickRepository->findBy([], [], self::LIMIT, $base*self::LIMIT);
         $tricksDisplay = array();
         foreach ($tricks as $trick) {
             $tricksDisplay[] = $this->renderView('tricks/card.html.twig', ['trick' => $trick]);
@@ -50,7 +50,7 @@ class HomeController extends AbstractController
 
         return $this->json([
             'offset' => $base + 1,
-            'nbToken' => ($request->query->getInt('nbToken')) - 5,
+            'nbToken' => ($request->query->getInt('nbToken')) - self::LIMIT,
             'tricks' => $tricksDisplay
         ]);
     }
