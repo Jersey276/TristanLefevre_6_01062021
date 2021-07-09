@@ -20,16 +20,16 @@ class MailServiceSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents() : array
     {
         return [
-            'register.newEmail' => [
+            'newEmail' => [
                 ['sendValidationMail',0],
             ],
-            'changeEmail.update' => [
+            'changeEmail' => [
                 ['sendEmailUpdateMail', 0],
             ],
-            'login.emailRecall' => [
+            'emailRecall' => [
                 ['sendRecallValidationMail',0]
             ],
-            'login.changePassword' => [
+            'changePassword' => [
                 ['sendChangePasswordMail',0]
             ]
         ];
@@ -99,7 +99,7 @@ class MailServiceSubscriber implements EventSubscriberInterface
         $mail->from(self::SENDER)
         ->to($event->getEmail())
         ->subject("Confirmer l'adresse mail")
-        ->htmlTemplate("email/validEmailRecall.html.twig")
+        ->htmlTemplate("email/changePassword.html.twig")
         ->context([
             'link' => 'change_password',
             'param' => ['token' => $event->getToken()]
