@@ -5,7 +5,7 @@
         {% else %}
             <div class="alert alert-{{ label }}">
         {% endif %}
-            {{ message }}
+            {{ message|nl2br}}
             </div>
     {% endfor %}
 {% endfor %}
