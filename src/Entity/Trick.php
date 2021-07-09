@@ -6,14 +6,9 @@ use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
- * @UniqueEntity(
- *      fields="title",
- *      message="Ce titre a déja été utilisé"
- *  )
  */
 class Trick
 {
@@ -116,17 +111,17 @@ class Trick
     
     public function getDisplayUrl() : String
     {
-        return "/tricks/". $this->getTitle();
+        return "/tricks/". $this->getId();
     }
 
     public function getEditUrl() : String
     {
-        return "/tricks/". $this->getTitle() . "/edit";
+        return "/tricks/". $this->getId() . "/edit";
     }
 
     public function getRemoveUrl() : String
     {
-        return "/tricks/". $this->getTitle() . "/remove";
+        return "/tricks/". $this->getId() . "/remove";
     }
 
     /**

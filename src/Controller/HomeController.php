@@ -15,9 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class HomeController extends AbstractController
 {
-    /**
-     * @var int limit of displayed tricks
-     */
     const LIMIT = 15;
 
     /**
@@ -45,7 +42,7 @@ class HomeController extends AbstractController
      */
     public function askMore(Request $request, TrickRepository $trickRepository, int $base) : Response
     {
-        $tricks = $trickRepository->findBy([], [], self::LIMIT, $base*self::LIMIT);
+        $tricks = $trickRepository->findBy([], [], 5, $base*5);
         $tricksDisplay = array();
         foreach ($tricks as $trick) {
             $tricksDisplay[] = $this->renderView('tricks/card.html.twig', ['trick' => $trick]);
@@ -53,7 +50,7 @@ class HomeController extends AbstractController
 
         return $this->json([
             'offset' => $base + 1,
-            'nbToken' => ($request->query->getInt('nbToken')) - self::LIMIT,
+            'nbToken' => ($request->query->getInt('nbToken')) - 5,
             'tricks' => $tricksDisplay
         ]);
     }

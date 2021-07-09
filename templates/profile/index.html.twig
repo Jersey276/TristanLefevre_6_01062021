@@ -49,7 +49,7 @@
                 {{ form_label(password_form.password.second)}}
             </div>
                 {{ form_widget(password_form.password.second) }}
-            {{ form_widget(password_form.update, {'attr' : { 'class' : 'btn btn-primary btn-sm btn-md'}})}}
+            {{ form_widget(password_form.update)}}
         </div>
         {{ form_errors(password_form.password)}}
     {{ form_end(password_form) }}
@@ -60,11 +60,11 @@
     </div>
     {{ form_start(email_form) }}
         <div class="input-group">
-            <div class="input-group-text d-none d-md-block">
+            <div class="input-group-text">
                 {{form_label(email_form.email) }}
             </div>
             {{ form_widget(email_form.email) }}
-            {{ form_widget(email_form.submit, {'attr' : { 'class' : 'btn btn-primary btn-sm btn-md'}}) }}
+            {{ form_widget(email_form.submit) }}
         </div>
     {{ form_end(email_form) }}
     <hr>

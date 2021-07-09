@@ -31,7 +31,7 @@ services:
 
     App\Service\MailServiceSubscriber:
         tags:
-            - { name: changeEmail, event: EmailEvent, method: sendEmailUpdateMail }
-            - { name: newEmail, event: EmailEvent, method: sendValidationMail }
-            - { name: emailRecall, event: EmailEvent, method: sendRecallValidationMail }
-            - { name: changePassword, event: EmailEvent, method: sendChangePasswordMail }
+            - { name: changeEmail.update, event: EmailEvent, method: sendValidationMail }
+            - { name: register.newEmail, event: EmailEvent, method: sendEmailUpdateMail }
+            - { name: login.emailRecall, event: EmailEvent, method: sendRecallValidationMail }
+            - { name: login.changePassword, event: EmailEvent, method: sendChangePasswordMail }

@@ -59,7 +59,7 @@ class UserChecker implements UserCheckerInterface
 
         // user email is not verified, the user will be notified
         if (!$user->getIsEmailCheck()) {
-            $token = $this->tokenRepository->findOneBy(['idUser' => $user->getId()]);
+            $token = $this->tokenRepository->findOneBy(['user' => $user]);
             if (isset($token)) {
                 $this->eventDispatcher->dispatch(new EmailEvent($user->getEmail(), $token->getToken()), EmailEvent::NAME_RECALL);
             } else {
@@ -67,7 +67,7 @@ class UserChecker implements UserCheckerInterface
                 $this->eventDispatcher->dispatch(new EmailEvent($user->getEmail(), $token->getToken()), EmailEvent::NAME_RECALL);
             }
             throw new CustomUserMessageAccountStatusException(
-                "Votre adresse mail n'a pas été vérifié. \n Un message de rappel a été envoyé"
+                "Votre adresse mail n'a pas été vérifié. <br> Un message de rappel a été envoyé"
             );
         }
     }
