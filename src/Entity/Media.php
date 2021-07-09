@@ -76,7 +76,7 @@ class Media
 
     public function getRemoveUrl() : string
     {
-        return '/tricks/'. $this->getTrick()->getTitle() . '/media/remove/' . $this->getId();
+        return '/tricks/'. $this->getTrick()->getId() . '/media/remove/' . $this->getId();
     }
 
     //functions for Video only

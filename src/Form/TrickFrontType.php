@@ -16,19 +16,14 @@ class TrickFrontType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
-        $id = $options['id'];
         $builder
             ->add('front', EntityType::class, [
                 'label' => 'trick.front.front',
-
                 'class' => Media::class,
-                'query_builder' => function(EntityRepository $er) use ($id) {
+                'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('media')
                         ->where("media.type = 1")
-                        ->where("media.trick = :trick")
-                        ->setParameter(":trick", $id)
                         ->orderBy('media.id', 'ASC');
-
                 },
                 'choice_label' => 'path',
                 'placeholder' => 'trick.front.placeholder'
@@ -42,8 +37,7 @@ class TrickFrontType extends AbstractType
     public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults([
-            'data-class' => Trick::class,
-            'id' => null
+            'data-class' => Trick::class
         ]);
     }
 }

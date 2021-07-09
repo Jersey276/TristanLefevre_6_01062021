@@ -55,13 +55,14 @@ class TokenManager extends AbstractManager
             switch ($type) {
             case "email":
                 $this->eventDispatcher->dispatch($event, $event::NAME_NEW_ACCOUNT);
-                return true;
+                break;
             case "password":
                 $this->eventDispatcher->dispatch($event, $event::NAME_NEW_PWD);
-                return true;
+                break;
             default:
                 return false;
             }
+            return true;
         }
         return false;
     }

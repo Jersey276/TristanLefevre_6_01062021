@@ -8,18 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(
- *      fields="username",
- *      message="Ce pseudonyme a déja été utilisé"
- *  )
- * @UniqueEntity(
- *      fields="email",
- *      message="Cet email a déja été utilisé"
- *  )
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

@@ -23,7 +23,7 @@ auth :
   email : email
   pseudonyme : Pseudonyme
 header :
-  home : Accueil
+  home : Acceuil
   tricks : Nouvelle figure
   profile : Profil
   login : Se connecter
@@ -40,10 +40,10 @@ profile :
     message : Votre compte devra être vérifié de nouveau.<br>Un email vous sera envoyé.
   removal :
     title : Supprimer votre compte
-    message : <strong class="text-width-bold">! Supprimer votre compte est une opération irréversible !</strong><br>Vos commentaires à travers les différentes figures seront supprimés.
+    message : <strong class="text-width-bold">! Supprimer votre compte est une opération irréversible !</strong><br>Vos commentaires à travers les différentes figures seront supprimer
     confirm :
-      title : Êtes-vous sûr de vouloir supprimer votre compte ?
-      message : Cette opération est irréversible et tous vos commentaires seront supprimés.
+      title : Etes-vous sûr de vouloir supprimer votre compte?
+      message : cette opération est irréversible et tous vos commentaires seront supprimées
 trick :
   title :
     add : Ajouter une figure
@@ -68,7 +68,7 @@ trick :
 errors :
   404 :
     title : Rien ...
-    message : Il semblerait que la page demandée n'existe pas sur notre site.
+    message : il semblerais que la page demandé n'existe pas sur notre site.
   403 :
     title : Accès refusé
-    message : Cette partie-là du site est interdite pour vous.
+    message : Cette partie là du site est interdite pour vous.

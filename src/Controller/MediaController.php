@@ -26,7 +26,7 @@ class MediaController extends AbstractController
      * @param Trick $item concerned trick
      * @param MediaManager $manager manager for media entity
      * @return Response Render / Json response
-     * @Route("/tricks/{title}/media/remove_front/", name="remove_front")
+     * @Route("/tricks/{id}/media/remove_front/", name="remove_front")
      * @IsGranted("ROLE_USER")
      */
     public function removeFront(Trick $item, MediaManager $manager) : Response
@@ -42,7 +42,7 @@ class MediaController extends AbstractController
      * @param MediaTypeRepository $mediaTypeRepo repository for media type
      * @param MediaManager $manager manager for media entity
      * @return Response Render / Json response
-     * @Route("/tricks/{title}/media/add", name="add_media")
+     * @Route("/tricks/{id}/media/add", name="add_media")
      * @IsGranted("ROLE_USER")
      */
     public function addMedia(
@@ -83,7 +83,7 @@ class MediaController extends AbstractController
      * @param MediaManager $manager manager for media entity
      * @param MediaTypeRepository $mediaTypeRepo repository for media type
      * @return Response Render / Json response
-     * @Route("/tricks/{title}/media/modify/{media_id}", name="modify_media")
+     * @Route("/tricks/{id}/media/modify/{media_id}", name="modify_media")
      * @ParamConverter("media", options={"id" = "media_id"})
      * @IsGranted("ROLE_USER")
      */
@@ -122,7 +122,7 @@ class MediaController extends AbstractController
      * @param Media $media concerned Media
      * @param MediaManager $manager manager for media entity
      * @return Response Render / Json response
-     * @Route("/tricks/{title}/media/remove/{media_id}", name="remove_media")
+     * @Route("/tricks/{id}/media/remove/{media_id}", name="remove_media")
      * @ParamConverter("media", options={"id" = "media_id"})
      * @IsGranted("ROLE_USER")
      */
@@ -142,7 +142,7 @@ class MediaController extends AbstractController
      * @param Media $media concerned media
      * @param MediaManager $manager manager for media Entity
      * @return Response Render / Json response
-     * @Route("/tricks/{title}/media/set_front/{media_id}", name="media_set_Front")
+     * @Route("/tricks/{id}/media/set_front/{media_id}", name="media_set_Front")
      * @ParamConverter("media", options={"id" = "media_id"})
      * @IsGranted("ROLE_USER")
      */
