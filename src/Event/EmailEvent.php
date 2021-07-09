@@ -12,13 +12,13 @@ use Symfony\Contracts\EventDispatcher\Event;
 class EmailEvent extends Event
 {
     /** @var string eventName for send email update */
-    const NAME_UPDATE = 'changeEmail.update';
+    const NAME_UPDATE = 'changeEmail';
     /** @var string eventName for register validation email */
-    const NAME_NEW_ACCOUNT = 'register.newEmail';
+    const NAME_NEW_ACCOUNT = 'newEmail';
     /** @var string eventName for email validation recall*/
-    const NAME_RECALL = 'login.emailRecall';
+    const NAME_RECALL = 'emailRecall';
     /** @var string eventName for change password email */
-    const NAME_NEW_PWD = 'login.changePassword';
+    const NAME_NEW_PWD = 'changePassword';
 
     private string $email;
     private string $token;
