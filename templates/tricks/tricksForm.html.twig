@@ -180,7 +180,9 @@
 		}
 		});
 
-		});{% if isEdit %}
+		});
+		
+		{% if isEdit %}
 		var id = "{{ tricks.getTitle() }}";
 
 		$("#MediaForm_type").change(function (e) {
@@ -193,7 +195,6 @@
 		id: 'media_path',
 		name: 'path'
 		}));
-		$('.')
 		break;
 		case "2":
 		$('#media_form_body').append($('<input>', {
@@ -208,7 +209,6 @@
 
 		$("#Media_form").submit(function (e) {
 		e.preventDefault();
-		console.log(e);
 		var type = e.currentTarget[0].value;
 		var formdata = new FormData();
 		formdata.append('type', type);
@@ -220,12 +220,12 @@
 		default:
 		process.exit(1);
 		}
+		console.log(e.currentTarget['media_form_id'].value);
 		if (e.currentTarget['media_form_id'].value != "") {
-		var url = "media/modify/" + e.currentTarget['media_form_title'].value;
+		var url = "/tricks/"+ id +"/media/modify/" + e.currentTarget['media_form_id'].value;
 		} else {
-		var url = "media/add"
+		var url = "/tricks/"+ id +"/media/add"
 		}
-
 		$.ajax({
 		url: url,
 		type: "Post",
