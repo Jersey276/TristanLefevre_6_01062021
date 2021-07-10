@@ -44,35 +44,35 @@
 		{% else %}
 			<h1 class="p-3 h3 mb-0 text-dark font-weight-normal">{% trans %} trick.title.add {% endtrans %}</h1>
 		{% endif %}
-			{{ form_start(form) }}
-			{{ form_errors(form) }}
 			<div class="d-flex flex-column align-items-center">
 				<div class="w-75">
-					{{ form_row(form.title) }}
-					{{ form_row(form.description) }}
-					{{ form_errors(form.trickGroup) }}
-					<div class="input-group my-3 mr-auto w-50">
-						<div class="input-group-text d-none d-md-block">
-							{{form_label(form.trickGroup)}}
+					{{ form_start(form) }}
+						{{ form_errors(form) }}
+						{{ form_row(form.title) }}
+						{{ form_row(form.description) }}
+						{{ form_errors(form.trickGroup) }}
+						<div class="input-group my-3 mr-auto w-50">
+							<div class="input-group-text d-none d-md-block">
+								{{form_label(form.trickGroup)}}
+							</div>
+							{{ form_widget(form.trickGroup) }}
+							<button type="button" class="btn btn-primary" data-bs-toggle='modal' data-bs-target='#staticBackdrop'>+</button>
 						</div>
-						{{ form_widget(form.trickGroup) }}
-						<button type="button" class="btn btn-primary" data-bs-toggle='modal' data-bs-target='#staticBackdrop'>+</button>
-					</div>
-					<div class="text-end">
-						{% if isEdit %}
-							<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal">
-								Supprimer
-							</button>
-							{{ form_widget(form.Envoyer, {'label':'general.update'}) }}
-						{% else %}
-							{{ form_widget(form.Envoyer, {'label':'general.submit'}) }}
-						{% endif %}
-					</div>
+						<div class="d-flex flex-row justify-content-end">
+							{% if isEdit %}
+								<button type="button" class="btn btn-danger me-3 align-self-start" data-bs-toggle="modal" data-bs-target="#DeleteModal">
+									{% trans %} general.remove {% endtrans %}
+								</button>
+								<div>
+								{{ form_row(form.Envoyer, {'label':'general.update'}) }}
+								</div>
+							{% else %}
+								{{ form_row(form.Envoyer, {'label':'general.submit'}) }}
+							{% endif %}
+						</div>
+					{{ form_end(form) }}
 				</div>
 			</div>
-		<div class="my-3">
-			{{ form_end(form) }}
-		</div>
 	</div>
 
 	<!-- Modal -->
@@ -101,7 +101,7 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+						<h5 class="modal-title" id="exampleModalLongTitle">Suppression de la figure {{ tricks.getTitle() }}</h5>
 					</div>
 					<div class="modal-body">
 						<p>
