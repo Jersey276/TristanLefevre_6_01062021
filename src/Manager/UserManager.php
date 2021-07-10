@@ -57,12 +57,12 @@ class UserManager extends AbstractManager
 
     /**
      * send token for ask to change password
-     * @param User $user concerned user
+     * @param String $user concerned user
      */
-    public function forgotPassword(User $user) : void
+    public function forgotPassword(String $email) : void
     {
         // Send mail with new token for change password
-        $this->tm->sendToken($user->getEmail(), "password");
+        $this->tm->sendToken($email, "password");
     }
 
     /**

@@ -53,14 +53,14 @@ class TokenManager extends AbstractManager
             $this->doctrine->flush();
             $event = new EmailEvent($user->getEmail(), $token->getToken());
             switch ($type) {
-            case "email":
-                $this->eventDispatcher->dispatch($event, $event::NAME_NEW_ACCOUNT);
-                return true;
-            case "password":
-                $this->eventDispatcher->dispatch($event, $event::NAME_NEW_PWD);
-                return true;
-            default:
-                return false;
+                case "email":
+                    $this->eventDispatcher->dispatch($event, $event::NAME_NEW_ACCOUNT);
+                    return true;
+                case "password":
+                    $this->eventDispatcher->dispatch($event, $event::NAME_NEW_PWD);
+                    return true;
+                default:
+                    return false;
             }
         }
         return false;
