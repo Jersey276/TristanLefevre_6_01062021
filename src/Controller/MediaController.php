@@ -32,7 +32,7 @@ class MediaController extends AbstractController
     public function removeFront(Trick $item, MediaManager $manager) : Response
     {
         $manager->removeFront($item);
-        return $this->redirectToRoute('tricks_edit_form', ['id' => $item->getId()]);
+        return $this->redirectToRoute('tricks_edit_form', ['title' => $item->getTitle()]);
     }
 
     /**
@@ -58,21 +58,22 @@ class MediaController extends AbstractController
             if ($type->getName() == "image") {
                 if ($manager->addImage($item, $request->files->get('path'), $type)) {
                     $this->addFlash('notice', 'Media rajouté');
-                } else {
-                    $this->addFlash('danger', 'Problème sur la collecte de l\'image');
+                    return $this->json('Ok',200);
                 }
+                $this->addFlash('danger', 'Problème sur la collecte de l\'image');
+                return $this->json('error with media upload',200);
             }
             if ($type->getName() == "video") {
                 if ($manager->addVideo($item, $request->request->filter('path', null, FILTER_SANITIZE_URL))) {
                     $this->addFlash('notice', 'Media rajouté');
-                } else {
-                    $this->addFlash('danger', 'Problème sur l\insetion de la vidéo');
+                    return $this->json('Ok',200);
                 }
+                $this->addFlash('danger', 'Problème sur l\insetion de la vidéo');
+                return $this->json('error with media upload',200);
             }
-            return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
         }
         $this->addFlash('danger', 'Type de media inconnu');
-        return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
+        return $this->json('UnknowMedia',200);
     }
 
     /**
@@ -94,26 +95,26 @@ class MediaController extends AbstractController
         MediaManager $manager,
         MediaTypeRepository $mediaTypeRepo
     ) : Response {
-        $type = ($mediaTypeRepo->find($request->request->get('type')));
+        $type = ($mediaTypeRepo->find($request->request->get('type')))->getName();
         if (isset($type)) {
             if ($type == "image") {
                 if ($manager->ChangeImage($item, $media, $request->files->get('path'))) {
                     $this->addFlash('notice', 'Media mis à jour');
-                } else {
-                    $this->addFlash('danger', 'Problème avec la mise à jour du média');
+                    return $this->json('Ok', 200);
                 }
+                $this->addFlash('danger', 'Problème avec la mise à jour du média');
+                return $this->json('error with media upload', 200);
             }
             if ($type == "video") {
                 if ($manager->changeVideo($media, $request->request->filter('path', null, FILTER_SANITIZE_URL))) {
                     $this->addFlash('notice', 'Media mis à jour');
-                } else {
-                    $this->addFlash('danger', 'Problème avec la mise à jour du média');
+                    return $this->json('error with media upload', 200);
                 }
+                $this->addFlash('danger', 'Problème avec la mise à jour du média');
             }
-            return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
+            $this->addFlash('danger', 'Type de media inconnu');
+            return $this->json('UnknowMedia', 200);
         }
-        $this->addFlash('danger', 'Type de media inconnu');
-        return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
     }
 
     /**
@@ -126,14 +127,14 @@ class MediaController extends AbstractController
      * @ParamConverter("media", options={"id" = "media_id"})
      * @IsGranted("ROLE_USER")
      */
-    public function removeMedia(Trick $item, Media $media, MediaManager $manager) : Response
+    public function removeMedia(Media $media, MediaManager $manager) : Response
     {
         if ($manager->removeMedia($media)) {
             $this->addFlash('notice', 'Media supprimé');
-        } else {
-            $this->addFlash('danger', 'Problème avec la suppression');
+            return $this->json('Ok', 200);
         }
-        return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
+            $this->addFlash('danger', 'Problème avec la suppression');
+        return $this->json('error with media upload', 500);
     }
 
     /**
@@ -153,6 +154,6 @@ class MediaController extends AbstractController
         } else {
             $this->addFlash('danger', "Problème avec la mise à jour de la une");
         }
-        return $this->redirectToRoute("tricks_edit_form", ['id' => $item->getId()]);
+        return $this->redirectToRoute("tricks_edit_form", ['title' => $item->getTitle()]);
     }
 }

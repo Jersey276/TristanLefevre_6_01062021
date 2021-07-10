@@ -74,11 +74,12 @@ class AuthController extends AbstractController
      */
     public function forgotPassword(Request $request, UserManager $userManager) : Response
     {
-        $user = new User();
-        $form = $this->createForm(ForgotPasswordType::class, $user);
+        $form = $this->createForm(ForgotPasswordType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $userManager->forgotPassword($user);
+            $email = ($form->getData())['email'];
+            $userManager->forgotPassword($email);
+            return $this->redirectToRoute('app_login');
         }
         return $this->render('security/forgotPassword.html.twig', [
             'form' => $form->createView(),
