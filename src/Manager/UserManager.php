@@ -57,12 +57,12 @@ class UserManager extends AbstractManager
 
     /**
      * send token for ask to change password
-     * @param User $user concerned user
+     * @param String $user concerned user
      */
-    public function forgotPassword(User $user) : void
+    public function forgotPassword(String $email) : void
     {
         // Send mail with new token for change password
-        $this->tm->sendToken($user->getEmail(), "password");
+        $this->tm->sendToken($email, "password");
     }
 
     /**
@@ -98,11 +98,10 @@ class UserManager extends AbstractManager
      * @param User $user concerned user
      * @return bool result
      */
-    public function changeEmailProfile(User $user) : bool
+    public function changeEmailProfile(User $user, String $email) : bool
     {
         try {
-            $oldUser = $this->doctrine->getRepository(User::class)->find($user->getId());
-            if (!isset($oldUser) || $oldUser->getEmail() == $user->getEmail()) {
+            if ($user->getEmail() == $email) {
                 return false;
             }
             $user->setIsEmailCheck(false);
@@ -110,10 +109,10 @@ class UserManager extends AbstractManager
             $token = $this->tm->generateToken($user, 'email');
             $event = new EmailEvent($user->getEmail(), $token->getToken());
             $this->eventDispatcher->dispatch($event, $event::NAME_UPDATE);
+            return true;
         } catch (ORMException $e) {
             return false;
         }
-        return true;
     }
 
     /**

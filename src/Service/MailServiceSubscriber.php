@@ -98,7 +98,7 @@ class MailServiceSubscriber implements EventSubscriberInterface
         $mail = new TemplatedEmail();
         $mail->from(self::SENDER)
         ->to($event->getEmail())
-        ->subject("Confirmer l'adresse mail")
+        ->subject("Confirmer le mot de passe")
         ->htmlTemplate("email/changePassword.html.twig")
         ->context([
             'link' => 'change_password',

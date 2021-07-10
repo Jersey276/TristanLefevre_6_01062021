@@ -66,6 +66,7 @@
             {{ form_widget(email_form.email) }}
             {{ form_widget(email_form.submit, {'attr' : { 'class' : 'btn btn-primary btn-sm btn-md'}}) }}
         </div>
+            {{ form_errors(email_form.email)}}
     {{ form_end(email_form) }}
     <hr>
     <h2>{% trans %} profile.removal.title{% endtrans %}</h2>

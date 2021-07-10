@@ -62,7 +62,7 @@ class TrickController extends AbstractController
                     'notice',
                     'La figure à été crée'
                 );
-                return $this->redirectToRoute("tricks_detail", ['id' => $tricks->getId()]);
+                return $this->redirectToRoute("tricks_detail", ['title' => $tricks->getTitle()]);
             }
             return $this->render('tricks/tricksForm.html.twig', [
                 'form' => $form->createView(),
