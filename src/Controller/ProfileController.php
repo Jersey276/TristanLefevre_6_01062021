@@ -6,6 +6,7 @@ use App\Form\ProfileAvatarFormType;
 use App\Form\ProfileEmailFormType;
 use App\Form\ProfilePasswordFormType;
 use App\Manager\UserManager;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,11 +29,12 @@ class ProfileController extends AbstractController
      * @Route("/profile", name="profile")
      * @IsGranted("ROLE_USER")
      */
-    public function index(Request $request, UserManager $manager): Response
+    public function index(Request $request, UserManager $manager, UserRepository $userRepo): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+        $oldEmail = ($userRepo->find($user->getId()))->getEmail();
         
         //password form
         $passwordForm = $this->createForm(ProfilePasswordFormType::class, $user);
@@ -50,12 +52,11 @@ class ProfileController extends AbstractController
         $emailForm = $this->createForm(ProfileEmailFormType::class, $user);
         $emailForm->handleRequest($request);
         if ($emailForm->isSubmitted() && $emailForm->isValid()) {
-            $userData = $emailForm->getData();
-            if ($manager->changeEmailProfile($userData)) {
+            if ($manager->changeEmailProfile($user, $oldEmail)) {
                 $this->addFlash('warning', 'L\'adresse mail à été modifié avec succès, vous allez recevoir un
                 mail pour la confirmer');
             } else {
-                $this->addFlash('danger', 'Echec dans la modification du mot de passe');
+                $this->addFlash('danger', 'Echec dans la modification de l\'adresse mail ' . $oldEmail);
             }
         }
 
