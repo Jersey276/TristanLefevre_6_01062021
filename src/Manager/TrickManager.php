@@ -6,6 +6,7 @@ use App\Entity\Trick;
 use App\Service\FileService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 /**
  * Manager of Trick entity
@@ -45,10 +46,15 @@ class TrickManager extends AbstractManager
      * remove a specified Trick
      * @param Trick $trick
      */
-    public function delete(Trick $trick) : void
+    public function delete(Trick $trick) : bool
     {
         $this->fileService->remove('/images/trick/'.$trick->getId());
         $this->doctrine->remove($trick);
-        $this->doctrine->flush();
+        try {
+            $this->doctrine->flush();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

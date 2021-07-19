@@ -16,36 +16,43 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     /**
+     * @var TrickRepository $repository
+     */
+    private TrickRepository $repository;
+
+    public function __construct(TrickRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+    /**
      * @var int limit of displayed tricks
      */
     const LIMIT = 15;
 
     /**
      * Display home page with 15 first trick
-     * @param TrickRepository $trickRepository repository for trick
      * @return Response Render / Json response
      * @Route("/", name="home")
      */
-    public function index(TrickRepository $trickRepository): Response
+    public function index(): Response
     {
-        $tricks = $trickRepository->findBy([], [], self::LIMIT, 0);
+        $tricks = $this->repository->findBy([], [], self::LIMIT, 0);
         return $this->render('index.html.twig', [
             'tricks' => $tricks,
             'offset' => 1,
-            'nbToken' => $trickRepository->count([])-self::LIMIT
+            'nbToken' => $this->repository->count([])-self::LIMIT
         ]);
     }
     /**
      * Send more trick on trick card template
      * @param Request $request request data
-     * @param TrickRepository $trickRepository repository for trick
      * @param int $base offset
      * @return Response Render / Json response
      * @Route("ask/{base}", name="show_more")
      */
-    public function askMore(Request $request, TrickRepository $trickRepository, int $base) : Response
+    public function askMore(Request $request, int $base) : Response
     {
-        $tricks = $trickRepository->findBy([], [], self::LIMIT, $base*self::LIMIT);
+        $tricks = $this->repository->findBy([], [], self::LIMIT, $base*self::LIMIT);
         $tricksDisplay = array();
         foreach ($tricks as $trick) {
             $tricksDisplay[] = $this->renderView('tricks/card.html.twig', ['trick' => $trick]);
