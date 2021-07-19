@@ -22,8 +22,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class MediaController extends AbstractController
 {
 
-
+    /**
+     * @var TranslatorInterface $translate
+     */
     private TranslatorInterface $translate;
+
+    /**
+     * @var MediaManager $manager
+     */
     private MediaManager $manager;
 
     public function __construct(

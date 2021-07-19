@@ -17,6 +17,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommentController extends AbstractController
 {
     /**
+     * @var CommentRepository $repository
+     */
+    private CommentRepository $repository;
+
+    public function __construct(CommentRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+    /**
      * @var int limit of displayed comment
      */
     const LIMIT = 4 ;
@@ -24,14 +33,13 @@ class CommentController extends AbstractController
      * send more comment on comment card template
      * @param Request $request request data
      * @param Trick $item concerned trick
-     * @param CommentRepository $commentRepository repository for comment
      * @return Response Render / Json response
      * @Route("tricks/{id}/comment", name= "comment")
      */
-    public function index(Request $request, Trick $item, CommentRepository $commentRepository): Response
+    public function index(Request $request, Trick $item): Response
     {
         $offset = $request->query->getInt('offset');
-        $comments = $commentRepository->findBy(['Tricks' => $item->getId()], ['id' => 'DESC'], self::LIMIT, $offset*self::LIMIT);
+        $comments = $this->repository->findBy(['Tricks' => $item->getId()], ['id' => 'DESC'], self::LIMIT, $offset*self::LIMIT);
         $commentDisplay = [];
         foreach ($comments as $comment) {
             $commentDisplay[] = $this->renderView('comment/card.html.twig', ['comment' => $comment]);
