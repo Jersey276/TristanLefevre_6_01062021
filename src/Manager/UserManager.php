@@ -57,7 +57,7 @@ class UserManager extends AbstractManager
 
     /**
      * send token for ask to change password
-     * @param String $user concerned user
+     * @param String $email concerned user
      */
     public function forgotPassword(String $email) : void
     {

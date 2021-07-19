@@ -66,6 +66,39 @@ trick :
       modify : Modifier un média
   comment :
     submit : Laisser un commentaire
+flash :
+  trick :
+    added : 
+      success : La figure a été crée.
+      error : Une erreur a eu lieu avec la création de la figure.
+    updated :
+      success : La figure a été mise à jour.
+      error : Une erreur a eu lieu avec la mise à jour de la figure.
+    removed :
+      success : La figure a été supprimé.
+      error : Une erreur a eu lieu avec la suppression de la figure.
+  media :
+    added :
+      success : Le média a été ajouté.
+      error : 
+        image : une erreur a eu lieu avec la collecte de l'image.
+        video : une erreur a eu lieu avec l'insertion du lien.
+    updated :
+      success : Le média a été mis à jour.
+      error : Une erreur a eu lieu avec la mise à jour du média.
+    removed :
+      success : Le média a été supprimé.
+      error : Une erreur a eu lieu avec la suppression du média.
+    frontset :
+      success : L'image de une à été mise à jour.
+      error : Une erreur a eu lieu avec la mise à jour de l'image de une.
+  profil :
+    modify :
+      success : "%data% a été modifié avec succès %extend%"
+      error :  "%data% n'a pas pu être modifié"
+    remove :
+      success : Votre profil a bien été supprimé.
+      error : Un problème empêche la suppression du compte
 errors :
   404 :
     title : Rien ...

@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Controller about all function/route about trick system
@@ -30,16 +30,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  */
 class TrickController extends AbstractController
 {
+    private TranslatorInterface $translate;
+
+    private TrickManager $trickManager;
+
+    public function __construct(
+        TranslatorInterface $translate,
+        TrickManager $trickManager
+    ) {
+        $this->translate = $translate;
+        $this->trickManager = $trickManager;
+    }
 
     /**
      * Create a new trick / Display trick form for new Trick
      * @param Request $request request data
-     * @param TrickManager $manager Manager for trick
      * @return Response Render / Json response
      * @Route("/tricks/new", name="tricks_new_form")
      * @IsGranted("ROLE_USER")
      */
-    public function trickNewForm(Request $request, TrickManager $manager) : Response
+    public function trickNewForm(Request $request) : Response
     {
         {
             $tricks = new Trick();
@@ -56,13 +66,19 @@ class TrickController extends AbstractController
                 ]
             );
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $manager->save($tricks);
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    $this->trickManager->save($tricks);
+                    $this->addFlash(
+                        'notice',
+                        $this->translate->trans('flash.trick.added.success')
+                    );
+                    return $this->redirectToRoute("tricks_detail", ['title' => $tricks->getTitle()]);
+                }
                 $this->addFlash(
-                    'notice',
-                    'La figure à été crée'
+                    'danger',
+                    $this->translate->trans('flash.trick.added.error')
                 );
-                return $this->redirectToRoute("tricks_detail", ['title' => $tricks->getTitle()]);
             }
             return $this->render('tricks/tricksForm.html.twig', [
                 'form' => $form->createView(),
@@ -80,8 +96,10 @@ class TrickController extends AbstractController
      * @Route("/tricks/new/category", name="add_category")
      * @IsGranted("ROLE_USER")
      */
-    public function trickNewCategory(Request $request, TrickGroupManager $manager) : Response
-    {
+    public function trickNewCategory(
+        Request $request,
+        TrickGroupManager $manager
+    ) : Response {
         $name = $request->request->getAlpha('nameGroup');
         if ($name != '') {
             $tricksGroup = $manager->addTrickGroup($name);
@@ -95,7 +113,7 @@ class TrickController extends AbstractController
         }
         return $this->json(
             [
-            'message' => 'Une erreur a eu lieu avec votre formulaire',
+            'message' => 'Une erreur a eu lieu avec votre formulaire.',
             ],
             500
         );
@@ -110,8 +128,12 @@ class TrickController extends AbstractController
      * @return Response Render / Json response
      * @Route("/tricks/{title}", name="tricks_detail")
      */
-    public function trickDetail(Request $request, Trick $item, CommentManager $manager, CommentRepository $commentRepository) : Response
-    {
+    public function trickDetail(
+        Request $request,
+        Trick $item,
+        CommentManager $manager,
+        CommentRepository $commentRepository
+    ) : Response {
         $arg = [ 'tricks' => $item ];
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             $comment = new Comment();
@@ -135,7 +157,6 @@ class TrickController extends AbstractController
      * Edit a trick / Display trick form for edit Trick
      * @param Request $request request data
      * @param Trick $item concerned trick
-     * @param TrickManager $trickManager Manager for trick
      * @param MediaManager $mediaManager Manager for Media
      * @param MediaRepository $mediaRepository Repository for media
      * @return Response Render / Json response
@@ -145,7 +166,6 @@ class TrickController extends AbstractController
     public function trickEditForm(
         Request $request,
         Trick $item,
-        TrickManager $trickManager,
         MediaManager $mediaManager,
         MediaRepository $mediaRepository
     ) : Response {
@@ -162,16 +182,22 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $item);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $trickManager->edit($form->getData());
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->trickManager->edit($form->getData());
+                $this->addFlash(
+                    'notice',
+                    $this->translate->trans('flash.trick.updated.success')
+                );
+                return $this->redirectToRoute('tricks_detail', ['title' => $item->getTitle()]);
+            }
             $this->addFlash(
-                'notice',
-                'La figure à été mise à jour'
+                'danger',
+                $this->translate->trans('flash.trick.updated.error')
             );
-            return $this->redirectToRoute('tricks_detail', ['title' => $item->getTitle()]);
         }
 
-        $formFront = $this->createForm(TrickFrontType::class, $item,['id' => $item->getId()]);
+        $formFront = $this->createForm(TrickFrontType::class, $item, ['id' => $item->getId()]);
         $formFront->handleRequest($request);
 
         if ($formFront->isSubmitted() && $formFront->isValid()) {
@@ -196,14 +222,24 @@ class TrickController extends AbstractController
     /**
      * Remove trick
      * @param Trick $item concerned trick
-     * @param TrickManager $tricks Manager for trick
      * @return Response Render / Json response
      * @Route("/tricks/{title}/remove", name="tricks_remove")
      * @IsGranted("ROLE_USER")
      */
-    public function trickRemove(Trick $item, TrickManager $tricks) : Response
+    public function trickRemove(Trick $item) : Response
     {
-        $tricks->delete($item);
-        return $this->redirectToRoute('home');
+        if ($this->trickManager->delete($item))
+        {
+            $this->addFlash(
+                'notice',
+                $this->translate->trans('flash.trick.removed.success')
+            );
+            return $this->redirectToRoute('home');
+        }
+        $this->addFlash(
+            'notice',
+            $this->translate->trans('flash.trick.removed.error')
+        );
+        return $this->redirectToRoute('tricks_detail', ['title' => $item->getTitle()]);
     }
 }
