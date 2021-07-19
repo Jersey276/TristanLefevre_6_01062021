@@ -22,6 +22,16 @@ class AuthController extends AbstractController
 {
 
     /**
+     * @var UserManager $manager
+     */
+    private UserManager $manager;
+
+    public function __construct(UserManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
+    /**
      * Login a user (prebuild function)
      * @param AuthenticationUtils $authenticationUtils authentification utility class
      * @return Response Render / Json response
@@ -44,11 +54,10 @@ class AuthController extends AbstractController
     /**
      * Display registration template / register a user
      * @param Request $request request data
-     * @param UserManager $userManager manager for user function
      * @return Response Render / Json response
      * @Route("/register", name="register")
      */
-    public function register(Request $request, UserManager $userManager) : Response
+    public function register(Request $request) : Response
     {
         $user = new User();
 
@@ -57,7 +66,7 @@ class AuthController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userManager->register($user);
+            $this->manager->register($user);
             return $this->redirectToRoute('app_login');
         }
         return $this->render('registration/index.html.twig', [
@@ -68,17 +77,16 @@ class AuthController extends AbstractController
     /**
      * Display forgot password template / ask to send mail for reset password
      * @param Request $request request data
-     * @param UserManager $userManager manager for user function
      * @return Response Render / Json response
      * @Route("/forgot_password", methods={"GET", "POST"}, name="forgot_password")
      */
-    public function forgotPassword(Request $request, UserManager $userManager) : Response
+    public function forgotPassword(Request $request) : Response
     {
         $form = $this->createForm(ForgotPasswordType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $email = ($form->getData())['email'];
-            $userManager->forgotPassword($email);
+            $this->manager->forgotPassword($email);
             return $this->redirectToRoute('app_login');
         }
         return $this->render('security/forgotPassword.html.twig', [
@@ -90,11 +98,10 @@ class AuthController extends AbstractController
      * Display change password template / change password
      * @param Request $request request data
      * @param String $token token
-     * @param UserManager $userManager manager for user function
      * @return Response Render / Json response
      * @Route("/reset_password/{token}", name="change_password")
      */
-    public function changePassword(Request $request, string $token, UserManager $userManager) : Response
+    public function changePassword(Request $request, string $token) : Response
     {
         $user = new User();
         $form = $this->createForm(
@@ -107,7 +114,7 @@ class AuthController extends AbstractController
         );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $userManager->changePassword($user, $token);
+            $this->manager->changePassword($user, $token);
             return $this->redirectToRoute('app_login');
         }
         return $this->render('security/changePassword.html.twig', [
@@ -118,13 +125,12 @@ class AuthController extends AbstractController
     /**
      * Display registration template / register a user
      * @param String $token token
-     * @param UserManager $manager manager for user function
      * @return Response Render / Json response
      * @Route("/verify_email/{token}", name="check_email")
      */
-    public function validEmail(string $token, UserManager $manager) : Response
+    public function validEmail(string $token) : Response
     {
-        $manager->validEmail($token);
+        $this->manager->validEmail($token);
 
         return $this->redirectToRoute('app_login');
     }
