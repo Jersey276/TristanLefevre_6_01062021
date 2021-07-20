@@ -61,7 +61,7 @@ class ProfileController extends AbstractController
             if ($this->manager->changePasswordProfile($userData)) {
                 $this->addFlash(
                     'notice',
-                    $this->translate->trans('flash.profil.modify.success',['%data%' => 'Le mot de passe','%%extend%s%' => ''])
+                    $this->translate->trans('flash.profil.modify.success',['%data%' => 'Le mot de passe','%extend%' => ''])
                 );
             } else {
                 $this->addFlash(
@@ -80,7 +80,7 @@ class ProfileController extends AbstractController
                     'warning',
                     $this->translate->trans('flash.profil.modify.success',[
                         '%data%' => 'L\'adresse mail',
-                        '%%extend%%' => ', vous allez recevoir un mail pour la confirmer'
+                        '%extend%' => ', vous allez recevoir un mail pour la confirmer'
                     ])
                 );
             } else {
