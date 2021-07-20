@@ -176,6 +176,10 @@ class MediaController extends AbstractController
      */
     public function removeMedia(Trick $item, Media $media) : Response
     {
+        if ($item->getFront()->getPath() == $media->getPath())
+        {
+            $this->manager->removeFront($item);
+        }
         if ($this->manager->removeMedia($media)) {
             $this->addFlash(
                 'notice',
